@@ -1354,7 +1354,7 @@ export type GetChargingStationByIdQuery = {
           >;
         }
       >;
-      Transactions: Array<
+      transactions: Array<
         Pick<
           Types.Transactions,
           | 'id'

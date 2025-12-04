@@ -80,8 +80,9 @@ export const TransactionDetail = () => {
     sorters: [{ field: MeterValueDtoProps.timestamp, order: 'asc' }],
     queryOptions: getPlainToInstanceOptions(MeterValueDto),
   });
+  console.log(meterValuesData);
   const meterValues = meterValuesData?.data ?? [];
-
+  console.log(meterValues);
   const authorization = transaction?.authorization;
 
   const { tableProps } = useTable<AuthorizationDto>({
@@ -91,7 +92,10 @@ export const TransactionDetail = () => {
       gqlQuery: GET_TRANSACTIONS_BY_AUTHORIZATION,
       gqlVariables: { id: authorization?.id, limit: 10000 },
     },
-    queryOptions: getPlainToInstanceOptions(),
+    queryOptions: {
+      enabled: !!authorization?.id,
+      ...getPlainToInstanceOptions(),
+    },
   });
 
   const authColumns = useMemo(() => getAuthorizationColumns(push), [push]);

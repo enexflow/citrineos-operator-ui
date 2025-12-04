@@ -44,10 +44,11 @@ export const PowerOverTime = ({
       if (kwFloat > max) max = Math.ceil(kwFloat);
       return { elapsedTime, kw };
     });
+    console.log(processedData);
 
     return { chartData: processedData, minValue: min, maxValue: max };
   }, [meterValues, validContexts]);
-
+  console.log(chartData);
   if (!chartData || chartData.length === 0) {
     return <div>No Power data available</div>;
   }

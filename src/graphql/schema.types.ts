@@ -30,10 +30,12 @@ export type Scalars = {
   enum_Connectors_errorCode: { input: any; output: any };
   enum_Connectors_status: { input: any; output: any };
   enum_InstalledCertificates_certificateType: { input: any; output: any };
+  float8: { input: any; output: any };
   geography: { input: any; output: any };
   geometry: { input: any; output: any };
   json: { input: any; output: any };
   jsonb: { input: any; output: any };
+  name: { input: any; output: any };
   numeric: { input: any; output: any };
   timestamptz: { input: any; output: any };
 };
@@ -475,12 +477,12 @@ export type AsyncJobStatuses_Variance_Order_By = {
 
 /** columns and relationships of "Authorizations" */
 export type Authorizations = {
+  /** An object relationship */
+  Authorization?: Maybe<Authorizations>;
   /** An array relationship */
   Authorizations: Array<Authorizations>;
   /** An aggregate relationship */
   Authorizations_aggregate: Authorizations_Aggregate;
-  /** An object relationship */
-  GroupAuthorization?: Maybe<Authorizations>;
   /** An array relationship */
   LocalListAuthorizations: Array<LocalListAuthorizations>;
   /** An aggregate relationship */
@@ -710,9 +712,9 @@ export type Authorizations_Avg_Order_By = {
 
 /** Boolean expression to filter rows from the table "Authorizations". All fields are combined with a logical 'AND'. */
 export type Authorizations_Bool_Exp = {
+  Authorization?: InputMaybe<Authorizations_Bool_Exp>;
   Authorizations?: InputMaybe<Authorizations_Bool_Exp>;
   Authorizations_aggregate?: InputMaybe<Authorizations_Aggregate_Bool_Exp>;
-  GroupAuthorization?: InputMaybe<Authorizations_Bool_Exp>;
   LocalListAuthorizations?: InputMaybe<LocalListAuthorizations_Bool_Exp>;
   LocalListAuthorizations_aggregate?: InputMaybe<LocalListAuthorizations_Aggregate_Bool_Exp>;
   Tenant?: InputMaybe<Tenants_Bool_Exp>;
@@ -781,8 +783,8 @@ export type Authorizations_Inc_Input = {
 
 /** input type for inserting data into table "Authorizations" */
 export type Authorizations_Insert_Input = {
+  Authorization?: InputMaybe<Authorizations_Obj_Rel_Insert_Input>;
   Authorizations?: InputMaybe<Authorizations_Arr_Rel_Insert_Input>;
-  GroupAuthorization?: InputMaybe<Authorizations_Obj_Rel_Insert_Input>;
   LocalListAuthorizations?: InputMaybe<LocalListAuthorizations_Arr_Rel_Insert_Input>;
   Tenant?: InputMaybe<Tenants_Obj_Rel_Insert_Input>;
   TenantPartner?: InputMaybe<TenantPartners_Obj_Rel_Insert_Input>;
@@ -919,8 +921,8 @@ export type Authorizations_On_Conflict = {
 
 /** Ordering options when selecting data from "Authorizations". */
 export type Authorizations_Order_By = {
+  Authorization?: InputMaybe<Authorizations_Order_By>;
   Authorizations_aggregate?: InputMaybe<Authorizations_Aggregate_Order_By>;
-  GroupAuthorization?: InputMaybe<Authorizations_Order_By>;
   LocalListAuthorizations_aggregate?: InputMaybe<LocalListAuthorizations_Aggregate_Order_By>;
   Tenant?: InputMaybe<Tenants_Order_By>;
   TenantPartner?: InputMaybe<TenantPartners_Order_By>;
@@ -1261,6 +1263,23 @@ export type Authorizations_Variance_Order_By = {
   id?: InputMaybe<Order_By>;
   tenantId?: InputMaybe<Order_By>;
   tenantPartnerId?: InputMaybe<Order_By>;
+};
+
+/** Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'. */
+export type Boolean_Array_Comparison_Exp = {
+  /** is the array contained in the given array value */
+  _contained_in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
+  /** does the array contain the given value */
+  _contains?: InputMaybe<Array<Scalars['Boolean']['input']>>;
+  _eq?: InputMaybe<Array<Scalars['Boolean']['input']>>;
+  _gt?: InputMaybe<Array<Scalars['Boolean']['input']>>;
+  _gte?: InputMaybe<Array<Scalars['Boolean']['input']>>;
+  _in?: InputMaybe<Array<Array<Scalars['Boolean']['input']>>>;
+  _is_null?: InputMaybe<Scalars['Boolean']['input']>;
+  _lt?: InputMaybe<Array<Scalars['Boolean']['input']>>;
+  _lte?: InputMaybe<Array<Scalars['Boolean']['input']>>;
+  _neq?: InputMaybe<Array<Scalars['Boolean']['input']>>;
+  _nin?: InputMaybe<Array<Array<Scalars['Boolean']['input']>>>;
 };
 
 /** Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'. */
@@ -1950,7 +1969,7 @@ export type Certificates_Bool_Exp = {
 export type Certificates_Constraint =
   /** unique or primary key constraint on columns "id" */
   | 'Certificates_pkey'
-  /** unique or primary key constraint on columns "serialNumber", "issuerName" */
+  /** unique or primary key constraint on columns "issuerName", "serialNumber" */
   | 'Certificates_serialNumber_issuerName_key';
 
 /** input type for incrementing numeric columns in table "Certificates" */
@@ -2772,8 +2791,6 @@ export type ChangeConfigurations_Variance_Order_By = {
 /** columns and relationships of "ChargingNeeds" */
 export type ChargingNeeds = {
   /** An object relationship */
-  Evse?: Maybe<Evses>;
-  /** An object relationship */
   Tenant: Tenants;
   /** An object relationship */
   Transaction?: Maybe<Transactions>;
@@ -2781,6 +2798,8 @@ export type ChargingNeeds = {
   createdAt: Scalars['timestamptz']['output'];
   dcChargingParameters?: Maybe<Scalars['jsonb']['output']>;
   departureTime?: Maybe<Scalars['timestamptz']['output']>;
+  /** An object relationship */
+  evseByEvseid?: Maybe<Evses>;
   evseId?: Maybe<Scalars['Int']['output']>;
   id: Scalars['Int']['output'];
   maxScheduleTuples?: Maybe<Scalars['Int']['output']>;
@@ -2886,7 +2905,6 @@ export type ChargingNeeds_Avg_Order_By = {
 
 /** Boolean expression to filter rows from the table "ChargingNeeds". All fields are combined with a logical 'AND'. */
 export type ChargingNeeds_Bool_Exp = {
-  Evse?: InputMaybe<Evses_Bool_Exp>;
   Tenant?: InputMaybe<Tenants_Bool_Exp>;
   Transaction?: InputMaybe<Transactions_Bool_Exp>;
   _and?: InputMaybe<Array<ChargingNeeds_Bool_Exp>>;
@@ -2896,6 +2914,7 @@ export type ChargingNeeds_Bool_Exp = {
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   dcChargingParameters?: InputMaybe<Jsonb_Comparison_Exp>;
   departureTime?: InputMaybe<Timestamptz_Comparison_Exp>;
+  evseByEvseid?: InputMaybe<Evses_Bool_Exp>;
   evseId?: InputMaybe<Int_Comparison_Exp>;
   id?: InputMaybe<Int_Comparison_Exp>;
   maxScheduleTuples?: InputMaybe<Int_Comparison_Exp>;
@@ -2939,13 +2958,13 @@ export type ChargingNeeds_Inc_Input = {
 
 /** input type for inserting data into table "ChargingNeeds" */
 export type ChargingNeeds_Insert_Input = {
-  Evse?: InputMaybe<Evses_Obj_Rel_Insert_Input>;
   Tenant?: InputMaybe<Tenants_Obj_Rel_Insert_Input>;
   Transaction?: InputMaybe<Transactions_Obj_Rel_Insert_Input>;
   acChargingParameters?: InputMaybe<Scalars['jsonb']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   dcChargingParameters?: InputMaybe<Scalars['jsonb']['input']>;
   departureTime?: InputMaybe<Scalars['timestamptz']['input']>;
+  evseByEvseid?: InputMaybe<Evses_Obj_Rel_Insert_Input>;
   evseId?: InputMaybe<Scalars['Int']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   maxScheduleTuples?: InputMaybe<Scalars['Int']['input']>;
@@ -3024,13 +3043,13 @@ export type ChargingNeeds_On_Conflict = {
 
 /** Ordering options when selecting data from "ChargingNeeds". */
 export type ChargingNeeds_Order_By = {
-  Evse?: InputMaybe<Evses_Order_By>;
   Tenant?: InputMaybe<Tenants_Order_By>;
   Transaction?: InputMaybe<Transactions_Order_By>;
   acChargingParameters?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   dcChargingParameters?: InputMaybe<Order_By>;
   departureTime?: InputMaybe<Order_By>;
+  evseByEvseid?: InputMaybe<Evses_Order_By>;
   evseId?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   maxScheduleTuples?: InputMaybe<Order_By>;
@@ -4976,7 +4995,9 @@ export type ChargingStationSecurityInfos_Constraint =
   /** unique or primary key constraint on columns "id" */
   | 'ChargingStationSecurityInfos_pkey'
   /** unique or primary key constraint on columns "stationId" */
-  | 'ChargingStationSecurityInfos_stationId_key';
+  | 'ChargingStationSecurityInfos_stationId_key'
+  /** unique or primary key constraint on columns "stationId" */
+  | 'ChargingStationSecurityInfos_stationId_key1';
 
 /** input type for incrementing numeric columns in table "ChargingStationSecurityInfos" */
 export type ChargingStationSecurityInfos_Inc_Input = {
@@ -5326,7 +5347,7 @@ export type ChargingStationSequences_Bool_Exp = {
 export type ChargingStationSequences_Constraint =
   /** unique or primary key constraint on columns "id" */
   | 'ChargingStationSequences_pkey'
-  /** unique or primary key constraint on columns "type", "stationId" */
+  /** unique or primary key constraint on columns "stationId", "type" */
   | 'ChargingStationSequences_stationId_type_key';
 
 /** input type for incrementing numeric columns in table "ChargingStationSequences" */
@@ -7980,7 +8001,7 @@ export type Connectors_Bool_Exp = {
 export type Connectors_Constraint =
   /** unique or primary key constraint on columns "id" */
   | 'Connectors_pkey'
-  /** unique or primary key constraint on columns "connectorId", "stationId" */
+  /** unique or primary key constraint on columns "stationId", "connectorId" */
   | 'Connectors_stationId_connectorId_key';
 
 /** input type for incrementing numeric columns in table "Connectors" */
@@ -8667,7 +8688,7 @@ export type EventData_Bool_Exp = {
 export type EventData_Constraint =
   /** unique or primary key constraint on columns "id" */
   | 'EventData_pkey'
-  /** unique or primary key constraint on columns "eventId", "stationId" */
+  /** unique or primary key constraint on columns "stationId", "eventId" */
   | 'EventData_stationId_eventId_key';
 
 /** input type for incrementing numeric columns in table "EventData" */
@@ -9627,10 +9648,6 @@ export type EvseTypes_Variance_Order_By = {
 
 /** columns and relationships of "Evses" */
 export type Evses = {
-  /** An array relationship */
-  ChargingNeeds: Array<ChargingNeeds>;
-  /** An aggregate relationship */
-  ChargingNeeds_aggregate: ChargingNeeds_Aggregate;
   /** An object relationship */
   ChargingStation?: Maybe<ChargingStations>;
   /** An array relationship */
@@ -9640,9 +9657,9 @@ export type Evses = {
   /** An object relationship */
   Tenant: Tenants;
   /** An array relationship */
-  Transactions: Array<Transactions>;
+  chargingNeedsByEvseid: Array<ChargingNeeds>;
   /** An aggregate relationship */
-  Transactions_aggregate: Transactions_Aggregate;
+  chargingNeedsByEvseid_aggregate: ChargingNeeds_Aggregate;
   createdAt: Scalars['timestamptz']['output'];
   evseId?: Maybe<Scalars['String']['output']>;
   evseTypeId?: Maybe<Scalars['Int']['output']>;
@@ -9651,25 +9668,11 @@ export type Evses = {
   removed?: Maybe<Scalars['Boolean']['output']>;
   stationId?: Maybe<Scalars['String']['output']>;
   tenantId: Scalars['Int']['output'];
+  /** An array relationship */
+  transactionsByEvseid: Array<Transactions>;
+  /** An aggregate relationship */
+  transactionsByEvseid_aggregate: Transactions_Aggregate;
   updatedAt: Scalars['timestamptz']['output'];
-};
-
-/** columns and relationships of "Evses" */
-export type EvsesChargingNeedsArgs = {
-  distinct_on?: InputMaybe<Array<ChargingNeeds_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<ChargingNeeds_Order_By>>;
-  where?: InputMaybe<ChargingNeeds_Bool_Exp>;
-};
-
-/** columns and relationships of "Evses" */
-export type EvsesChargingNeeds_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<ChargingNeeds_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<ChargingNeeds_Order_By>>;
-  where?: InputMaybe<ChargingNeeds_Bool_Exp>;
 };
 
 /** columns and relationships of "Evses" */
@@ -9691,7 +9694,25 @@ export type EvsesConnectors_AggregateArgs = {
 };
 
 /** columns and relationships of "Evses" */
-export type EvsesTransactionsArgs = {
+export type EvsesChargingNeedsByEvseidArgs = {
+  distinct_on?: InputMaybe<Array<ChargingNeeds_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<ChargingNeeds_Order_By>>;
+  where?: InputMaybe<ChargingNeeds_Bool_Exp>;
+};
+
+/** columns and relationships of "Evses" */
+export type EvsesChargingNeedsByEvseid_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<ChargingNeeds_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<ChargingNeeds_Order_By>>;
+  where?: InputMaybe<ChargingNeeds_Bool_Exp>;
+};
+
+/** columns and relationships of "Evses" */
+export type EvsesTransactionsByEvseidArgs = {
   distinct_on?: InputMaybe<Array<Transactions_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -9700,7 +9721,7 @@ export type EvsesTransactionsArgs = {
 };
 
 /** columns and relationships of "Evses" */
-export type EvsesTransactions_AggregateArgs = {
+export type EvsesTransactionsByEvseid_AggregateArgs = {
   distinct_on?: InputMaybe<Array<Transactions_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -9800,17 +9821,15 @@ export type Evses_Avg_Order_By = {
 
 /** Boolean expression to filter rows from the table "Evses". All fields are combined with a logical 'AND'. */
 export type Evses_Bool_Exp = {
-  ChargingNeeds?: InputMaybe<ChargingNeeds_Bool_Exp>;
-  ChargingNeeds_aggregate?: InputMaybe<ChargingNeeds_Aggregate_Bool_Exp>;
   ChargingStation?: InputMaybe<ChargingStations_Bool_Exp>;
   Connectors?: InputMaybe<Connectors_Bool_Exp>;
   Connectors_aggregate?: InputMaybe<Connectors_Aggregate_Bool_Exp>;
   Tenant?: InputMaybe<Tenants_Bool_Exp>;
-  Transactions?: InputMaybe<Transactions_Bool_Exp>;
-  Transactions_aggregate?: InputMaybe<Transactions_Aggregate_Bool_Exp>;
   _and?: InputMaybe<Array<Evses_Bool_Exp>>;
   _not?: InputMaybe<Evses_Bool_Exp>;
   _or?: InputMaybe<Array<Evses_Bool_Exp>>;
+  chargingNeedsByEvseid?: InputMaybe<ChargingNeeds_Bool_Exp>;
+  chargingNeedsByEvseid_aggregate?: InputMaybe<ChargingNeeds_Aggregate_Bool_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   evseId?: InputMaybe<String_Comparison_Exp>;
   evseTypeId?: InputMaybe<Int_Comparison_Exp>;
@@ -9819,6 +9838,8 @@ export type Evses_Bool_Exp = {
   removed?: InputMaybe<Boolean_Comparison_Exp>;
   stationId?: InputMaybe<String_Comparison_Exp>;
   tenantId?: InputMaybe<Int_Comparison_Exp>;
+  transactionsByEvseid?: InputMaybe<Transactions_Bool_Exp>;
+  transactionsByEvseid_aggregate?: InputMaybe<Transactions_Aggregate_Bool_Exp>;
   updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
 
@@ -9836,11 +9857,10 @@ export type Evses_Inc_Input = {
 
 /** input type for inserting data into table "Evses" */
 export type Evses_Insert_Input = {
-  ChargingNeeds?: InputMaybe<ChargingNeeds_Arr_Rel_Insert_Input>;
   ChargingStation?: InputMaybe<ChargingStations_Obj_Rel_Insert_Input>;
   Connectors?: InputMaybe<Connectors_Arr_Rel_Insert_Input>;
   Tenant?: InputMaybe<Tenants_Obj_Rel_Insert_Input>;
-  Transactions?: InputMaybe<Transactions_Arr_Rel_Insert_Input>;
+  chargingNeedsByEvseid?: InputMaybe<ChargingNeeds_Arr_Rel_Insert_Input>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   evseId?: InputMaybe<Scalars['String']['input']>;
   evseTypeId?: InputMaybe<Scalars['Int']['input']>;
@@ -9849,6 +9869,7 @@ export type Evses_Insert_Input = {
   removed?: InputMaybe<Scalars['Boolean']['input']>;
   stationId?: InputMaybe<Scalars['String']['input']>;
   tenantId?: InputMaybe<Scalars['Int']['input']>;
+  transactionsByEvseid?: InputMaybe<Transactions_Arr_Rel_Insert_Input>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
 };
 
@@ -9924,11 +9945,10 @@ export type Evses_On_Conflict = {
 
 /** Ordering options when selecting data from "Evses". */
 export type Evses_Order_By = {
-  ChargingNeeds_aggregate?: InputMaybe<ChargingNeeds_Aggregate_Order_By>;
   ChargingStation?: InputMaybe<ChargingStations_Order_By>;
   Connectors_aggregate?: InputMaybe<Connectors_Aggregate_Order_By>;
   Tenant?: InputMaybe<Tenants_Order_By>;
-  Transactions_aggregate?: InputMaybe<Transactions_Aggregate_Order_By>;
+  chargingNeedsByEvseid_aggregate?: InputMaybe<ChargingNeeds_Aggregate_Order_By>;
   createdAt?: InputMaybe<Order_By>;
   evseId?: InputMaybe<Order_By>;
   evseTypeId?: InputMaybe<Order_By>;
@@ -9937,6 +9957,7 @@ export type Evses_Order_By = {
   removed?: InputMaybe<Order_By>;
   stationId?: InputMaybe<Order_By>;
   tenantId?: InputMaybe<Order_By>;
+  transactionsByEvseid_aggregate?: InputMaybe<Transactions_Aggregate_Order_By>;
   updatedAt?: InputMaybe<Order_By>;
 };
 
@@ -14506,7 +14527,7 @@ export type OcppMessages_Variance_Order_By = {
 /** columns and relationships of "Reservations" */
 export type Reservations = {
   /** An object relationship */
-  EvseType?: Maybe<EvseTypes>;
+  Evse?: Maybe<EvseTypes>;
   /** An object relationship */
   Tenant: Tenants;
   connectorType?: Maybe<Scalars['String']['output']>;
@@ -14635,7 +14656,7 @@ export type Reservations_Avg_Order_By = {
 
 /** Boolean expression to filter rows from the table "Reservations". All fields are combined with a logical 'AND'. */
 export type Reservations_Bool_Exp = {
-  EvseType?: InputMaybe<EvseTypes_Bool_Exp>;
+  Evse?: InputMaybe<EvseTypes_Bool_Exp>;
   Tenant?: InputMaybe<Tenants_Bool_Exp>;
   _and?: InputMaybe<Array<Reservations_Bool_Exp>>;
   _not?: InputMaybe<Reservations_Bool_Exp>;
@@ -14691,7 +14712,7 @@ export type Reservations_Inc_Input = {
 
 /** input type for inserting data into table "Reservations" */
 export type Reservations_Insert_Input = {
-  EvseType?: InputMaybe<EvseTypes_Obj_Rel_Insert_Input>;
+  Evse?: InputMaybe<EvseTypes_Obj_Rel_Insert_Input>;
   Tenant?: InputMaybe<Tenants_Obj_Rel_Insert_Input>;
   connectorType?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -14786,7 +14807,7 @@ export type Reservations_On_Conflict = {
 
 /** Ordering options when selecting data from "Reservations". */
 export type Reservations_Order_By = {
-  EvseType?: InputMaybe<EvseTypes_Order_By>;
+  Evse?: InputMaybe<EvseTypes_Order_By>;
   Tenant?: InputMaybe<Tenants_Order_By>;
   connectorType?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
@@ -16016,7 +16037,7 @@ export type SendLocalListAuthorizations_Bool_Exp = {
 
 /** unique or primary key constraints on table "SendLocalListAuthorizations" */
 export type SendLocalListAuthorizations_Constraint =
-  /** unique or primary key constraint on columns "sendLocalListId", "authorizationId" */
+  /** unique or primary key constraint on columns "authorizationId", "sendLocalListId" */
   'SendLocalListAuthorizations_pkey';
 
 /** input type for incrementing numeric columns in table "SendLocalListAuthorizations" */
@@ -16684,6 +16705,118 @@ export type SendLocalLists_Variance_Order_By = {
   id?: InputMaybe<Order_By>;
   tenantId?: InputMaybe<Order_By>;
   versionNumber?: InputMaybe<Order_By>;
+};
+
+/** columns and relationships of "SequelizeMeta" */
+export type SequelizeMeta = {
+  name: Scalars['String']['output'];
+};
+
+/** aggregated selection of "SequelizeMeta" */
+export type SequelizeMeta_Aggregate = {
+  aggregate?: Maybe<SequelizeMeta_Aggregate_Fields>;
+  nodes: Array<SequelizeMeta>;
+};
+
+/** aggregate fields of "SequelizeMeta" */
+export type SequelizeMeta_Aggregate_Fields = {
+  count: Scalars['Int']['output'];
+  max?: Maybe<SequelizeMeta_Max_Fields>;
+  min?: Maybe<SequelizeMeta_Min_Fields>;
+};
+
+/** aggregate fields of "SequelizeMeta" */
+export type SequelizeMeta_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<SequelizeMeta_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Boolean expression to filter rows from the table "SequelizeMeta". All fields are combined with a logical 'AND'. */
+export type SequelizeMeta_Bool_Exp = {
+  _and?: InputMaybe<Array<SequelizeMeta_Bool_Exp>>;
+  _not?: InputMaybe<SequelizeMeta_Bool_Exp>;
+  _or?: InputMaybe<Array<SequelizeMeta_Bool_Exp>>;
+  name?: InputMaybe<String_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "SequelizeMeta" */
+export type SequelizeMeta_Constraint =
+  /** unique or primary key constraint on columns "name" */
+  'SequelizeMeta_pkey';
+
+/** input type for inserting data into table "SequelizeMeta" */
+export type SequelizeMeta_Insert_Input = {
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate max on columns */
+export type SequelizeMeta_Max_Fields = {
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+/** aggregate min on columns */
+export type SequelizeMeta_Min_Fields = {
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+/** response of any mutation on the table "SequelizeMeta" */
+export type SequelizeMeta_Mutation_Response = {
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<SequelizeMeta>;
+};
+
+/** on_conflict condition type for table "SequelizeMeta" */
+export type SequelizeMeta_On_Conflict = {
+  constraint: SequelizeMeta_Constraint;
+  update_columns?: Array<SequelizeMeta_Update_Column>;
+  where?: InputMaybe<SequelizeMeta_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "SequelizeMeta". */
+export type SequelizeMeta_Order_By = {
+  name?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: SequelizeMeta */
+export type SequelizeMeta_Pk_Columns_Input = {
+  name: Scalars['String']['input'];
+};
+
+/** select columns of table "SequelizeMeta" */
+export type SequelizeMeta_Select_Column =
+  /** column name */
+  'name';
+
+/** input type for updating data in table "SequelizeMeta" */
+export type SequelizeMeta_Set_Input = {
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Streaming cursor of the table "SequelizeMeta" */
+export type SequelizeMeta_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: SequelizeMeta_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type SequelizeMeta_Stream_Cursor_Value_Input = {
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** update columns of table "SequelizeMeta" */
+export type SequelizeMeta_Update_Column =
+  /** column name */
+  'name';
+
+export type SequelizeMeta_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<SequelizeMeta_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: SequelizeMeta_Bool_Exp;
 };
 
 /** columns and relationships of "ServerNetworkProfiles" */
@@ -17444,6 +17577,8 @@ export type SetNetworkProfiles_Bool_Exp = {
 export type SetNetworkProfiles_Constraint =
   /** unique or primary key constraint on columns "correlationId" */
   | 'SetNetworkProfiles_correlationId_key'
+  /** unique or primary key constraint on columns "correlationId" */
+  | 'SetNetworkProfiles_correlationId_key1'
   /** unique or primary key constraint on columns "id" */
   | 'SetNetworkProfiles_pkey';
 
@@ -20044,7 +20179,9 @@ export type Tariffs_Constraint =
   /** unique or primary key constraint on columns "id" */
   | 'Tariffs_pkey'
   /** unique or primary key constraint on columns "stationId" */
-  | 'Tariffs_stationId_key';
+  | 'Tariffs_stationId_key'
+  /** unique or primary key constraint on columns "stationId" */
+  | 'Tariffs_stationId_key1';
 
 /** input type for incrementing numeric columns in table "Tariffs" */
 export type Tariffs_Inc_Input = {
@@ -21147,7 +21284,7 @@ export type Tenants = {
   countryCode: Scalars['String']['output'];
   createdAt: Scalars['timestamptz']['output'];
   id: Scalars['Int']['output'];
-  name?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
   partyId: Scalars['String']['output'];
   serverProfileOCPI?: Maybe<Scalars['jsonb']['output']>;
   updatedAt: Scalars['timestamptz']['output'];
@@ -22497,7 +22634,7 @@ export type Tenants_Variance_Fields = {
 /** columns and relationships of "TransactionEvents" */
 export type TransactionEvents = {
   /** An object relationship */
-  EvseType?: Maybe<EvseTypes>;
+  Evse?: Maybe<EvseTypes>;
   /** An array relationship */
   MeterValues: Array<MeterValues>;
   /** An aggregate relationship */
@@ -22651,7 +22788,7 @@ export type TransactionEvents_Avg_Order_By = {
 
 /** Boolean expression to filter rows from the table "TransactionEvents". All fields are combined with a logical 'AND'. */
 export type TransactionEvents_Bool_Exp = {
-  EvseType?: InputMaybe<EvseTypes_Bool_Exp>;
+  Evse?: InputMaybe<EvseTypes_Bool_Exp>;
   MeterValues?: InputMaybe<MeterValues_Bool_Exp>;
   MeterValues_aggregate?: InputMaybe<MeterValues_Aggregate_Bool_Exp>;
   Tenant?: InputMaybe<Tenants_Bool_Exp>;
@@ -22698,7 +22835,7 @@ export type TransactionEvents_Inc_Input = {
 
 /** input type for inserting data into table "TransactionEvents" */
 export type TransactionEvents_Insert_Input = {
-  EvseType?: InputMaybe<EvseTypes_Obj_Rel_Insert_Input>;
+  Evse?: InputMaybe<EvseTypes_Obj_Rel_Insert_Input>;
   MeterValues?: InputMaybe<MeterValues_Arr_Rel_Insert_Input>;
   Tenant?: InputMaybe<Tenants_Obj_Rel_Insert_Input>;
   Transaction?: InputMaybe<Transactions_Obj_Rel_Insert_Input>;
@@ -22826,7 +22963,7 @@ export type TransactionEvents_On_Conflict = {
 
 /** Ordering options when selecting data from "TransactionEvents". */
 export type TransactionEvents_Order_By = {
-  EvseType?: InputMaybe<EvseTypes_Order_By>;
+  Evse?: InputMaybe<EvseTypes_Order_By>;
   MeterValues_aggregate?: InputMaybe<MeterValues_Aggregate_Order_By>;
   Tenant?: InputMaybe<Tenants_Order_By>;
   Transaction?: InputMaybe<Transactions_Order_By>;
@@ -24097,7 +24234,7 @@ export type VariableAttributes = {
   /** An object relationship */
   Component?: Maybe<Components>;
   /** An object relationship */
-  EvseType?: Maybe<EvseTypes>;
+  Evse?: Maybe<EvseTypes>;
   /** An object relationship */
   Tenant: Tenants;
   /** An object relationship */
@@ -24241,7 +24378,7 @@ export type VariableAttributes_Bool_Exp = {
   Boot?: InputMaybe<Boots_Bool_Exp>;
   ChargingStation?: InputMaybe<ChargingStations_Bool_Exp>;
   Component?: InputMaybe<Components_Bool_Exp>;
-  EvseType?: InputMaybe<EvseTypes_Bool_Exp>;
+  Evse?: InputMaybe<EvseTypes_Bool_Exp>;
   Tenant?: InputMaybe<Tenants_Bool_Exp>;
   Variable?: InputMaybe<Variables_Bool_Exp>;
   VariableStatuses?: InputMaybe<VariableStatuses_Bool_Exp>;
@@ -24271,21 +24408,21 @@ export type VariableAttributes_Bool_Exp = {
 export type VariableAttributes_Constraint =
   /** unique or primary key constraint on columns "id" */
   | 'VariableAttributes_pkey'
-  /** unique or primary key constraint on columns "type", "componentId", "stationId", "variableId" */
+  /** unique or primary key constraint on columns "stationId", "componentId", "type", "variableId" */
   | 'VariableAttributes_stationId_type_variableId_componentId_key'
   /** unique or primary key constraint on columns "stationId" */
   | 'variable_attributes_station_id'
-  /** unique or primary key constraint on columns "componentId", "stationId" */
+  /** unique or primary key constraint on columns "stationId", "componentId" */
   | 'variable_attributes_station_id_component_id'
-  /** unique or primary key constraint on columns "type", "stationId" */
+  /** unique or primary key constraint on columns "stationId", "type" */
   | 'variable_attributes_station_id_type'
-  /** unique or primary key constraint on columns "type", "componentId", "stationId" */
+  /** unique or primary key constraint on columns "stationId", "componentId", "type" */
   | 'variable_attributes_station_id_type_component_id'
-  /** unique or primary key constraint on columns "type", "stationId", "variableId" */
+  /** unique or primary key constraint on columns "stationId", "type", "variableId" */
   | 'variable_attributes_station_id_type_variable_id'
   /** unique or primary key constraint on columns "stationId", "variableId" */
   | 'variable_attributes_station_id_variable_id'
-  /** unique or primary key constraint on columns "componentId", "stationId", "variableId" */
+  /** unique or primary key constraint on columns "stationId", "componentId", "variableId" */
   | 'variable_attributes_station_id_variable_id_component_id';
 
 /** input type for incrementing numeric columns in table "VariableAttributes" */
@@ -24302,7 +24439,7 @@ export type VariableAttributes_Insert_Input = {
   Boot?: InputMaybe<Boots_Obj_Rel_Insert_Input>;
   ChargingStation?: InputMaybe<ChargingStations_Obj_Rel_Insert_Input>;
   Component?: InputMaybe<Components_Obj_Rel_Insert_Input>;
-  EvseType?: InputMaybe<EvseTypes_Obj_Rel_Insert_Input>;
+  Evse?: InputMaybe<EvseTypes_Obj_Rel_Insert_Input>;
   Tenant?: InputMaybe<Tenants_Obj_Rel_Insert_Input>;
   Variable?: InputMaybe<Variables_Obj_Rel_Insert_Input>;
   VariableStatuses?: InputMaybe<VariableStatuses_Arr_Rel_Insert_Input>;
@@ -24423,7 +24560,7 @@ export type VariableAttributes_Order_By = {
   Boot?: InputMaybe<Boots_Order_By>;
   ChargingStation?: InputMaybe<ChargingStations_Order_By>;
   Component?: InputMaybe<Components_Order_By>;
-  EvseType?: InputMaybe<EvseTypes_Order_By>;
+  Evse?: InputMaybe<EvseTypes_Order_By>;
   Tenant?: InputMaybe<Tenants_Order_By>;
   Variable?: InputMaybe<Variables_Order_By>;
   VariableStatuses_aggregate?: InputMaybe<VariableStatuses_Aggregate_Order_By>;
@@ -27136,8 +27273,199 @@ export type Enum_InstalledCertificates_CertificateType_Comparison_Exp = {
   >;
 };
 
+/** Boolean expression to compare columns of type "float8". All fields are combined with logical 'AND'. */
+export type Float8_Array_Comparison_Exp = {
+  /** is the array contained in the given array value */
+  _contained_in?: InputMaybe<Array<Scalars['float8']['input']>>;
+  /** does the array contain the given value */
+  _contains?: InputMaybe<Array<Scalars['float8']['input']>>;
+  _eq?: InputMaybe<Array<Scalars['float8']['input']>>;
+  _gt?: InputMaybe<Array<Scalars['float8']['input']>>;
+  _gte?: InputMaybe<Array<Scalars['float8']['input']>>;
+  _in?: InputMaybe<Array<Array<Scalars['float8']['input']>>>;
+  _is_null?: InputMaybe<Scalars['Boolean']['input']>;
+  _lt?: InputMaybe<Array<Scalars['float8']['input']>>;
+  _lte?: InputMaybe<Array<Scalars['float8']['input']>>;
+  _neq?: InputMaybe<Array<Scalars['float8']['input']>>;
+  _nin?: InputMaybe<Array<Array<Scalars['float8']['input']>>>;
+};
+
+/** Boolean expression to compare columns of type "float8". All fields are combined with logical 'AND'. */
+export type Float8_Comparison_Exp = {
+  _eq?: InputMaybe<Scalars['float8']['input']>;
+  _gt?: InputMaybe<Scalars['float8']['input']>;
+  _gte?: InputMaybe<Scalars['float8']['input']>;
+  _in?: InputMaybe<Array<Scalars['float8']['input']>>;
+  _is_null?: InputMaybe<Scalars['Boolean']['input']>;
+  _lt?: InputMaybe<Scalars['float8']['input']>;
+  _lte?: InputMaybe<Scalars['float8']['input']>;
+  _neq?: InputMaybe<Scalars['float8']['input']>;
+  _nin?: InputMaybe<Array<Scalars['float8']['input']>>;
+};
+
 export type Geography_Cast_Exp = {
   geometry?: InputMaybe<Geometry_Comparison_Exp>;
+};
+
+/** columns and relationships of "geography_columns" */
+export type Geography_Columns = {
+  coord_dimension?: Maybe<Scalars['Int']['output']>;
+  f_geography_column?: Maybe<Scalars['name']['output']>;
+  f_table_catalog?: Maybe<Scalars['name']['output']>;
+  f_table_name?: Maybe<Scalars['name']['output']>;
+  f_table_schema?: Maybe<Scalars['name']['output']>;
+  srid?: Maybe<Scalars['Int']['output']>;
+  type?: Maybe<Scalars['String']['output']>;
+};
+
+/** aggregated selection of "geography_columns" */
+export type Geography_Columns_Aggregate = {
+  aggregate?: Maybe<Geography_Columns_Aggregate_Fields>;
+  nodes: Array<Geography_Columns>;
+};
+
+/** aggregate fields of "geography_columns" */
+export type Geography_Columns_Aggregate_Fields = {
+  avg?: Maybe<Geography_Columns_Avg_Fields>;
+  count: Scalars['Int']['output'];
+  max?: Maybe<Geography_Columns_Max_Fields>;
+  min?: Maybe<Geography_Columns_Min_Fields>;
+  stddev?: Maybe<Geography_Columns_Stddev_Fields>;
+  stddev_pop?: Maybe<Geography_Columns_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Geography_Columns_Stddev_Samp_Fields>;
+  sum?: Maybe<Geography_Columns_Sum_Fields>;
+  var_pop?: Maybe<Geography_Columns_Var_Pop_Fields>;
+  var_samp?: Maybe<Geography_Columns_Var_Samp_Fields>;
+  variance?: Maybe<Geography_Columns_Variance_Fields>;
+};
+
+/** aggregate fields of "geography_columns" */
+export type Geography_Columns_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Geography_Columns_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** aggregate avg on columns */
+export type Geography_Columns_Avg_Fields = {
+  coord_dimension?: Maybe<Scalars['Float']['output']>;
+  srid?: Maybe<Scalars['Float']['output']>;
+};
+
+/** Boolean expression to filter rows from the table "geography_columns". All fields are combined with a logical 'AND'. */
+export type Geography_Columns_Bool_Exp = {
+  _and?: InputMaybe<Array<Geography_Columns_Bool_Exp>>;
+  _not?: InputMaybe<Geography_Columns_Bool_Exp>;
+  _or?: InputMaybe<Array<Geography_Columns_Bool_Exp>>;
+  coord_dimension?: InputMaybe<Int_Comparison_Exp>;
+  f_geography_column?: InputMaybe<Name_Comparison_Exp>;
+  f_table_catalog?: InputMaybe<Name_Comparison_Exp>;
+  f_table_name?: InputMaybe<Name_Comparison_Exp>;
+  f_table_schema?: InputMaybe<Name_Comparison_Exp>;
+  srid?: InputMaybe<Int_Comparison_Exp>;
+  type?: InputMaybe<String_Comparison_Exp>;
+};
+
+/** aggregate max on columns */
+export type Geography_Columns_Max_Fields = {
+  coord_dimension?: Maybe<Scalars['Int']['output']>;
+  srid?: Maybe<Scalars['Int']['output']>;
+  type?: Maybe<Scalars['String']['output']>;
+};
+
+/** aggregate min on columns */
+export type Geography_Columns_Min_Fields = {
+  coord_dimension?: Maybe<Scalars['Int']['output']>;
+  srid?: Maybe<Scalars['Int']['output']>;
+  type?: Maybe<Scalars['String']['output']>;
+};
+
+/** Ordering options when selecting data from "geography_columns". */
+export type Geography_Columns_Order_By = {
+  coord_dimension?: InputMaybe<Order_By>;
+  f_geography_column?: InputMaybe<Order_By>;
+  f_table_catalog?: InputMaybe<Order_By>;
+  f_table_name?: InputMaybe<Order_By>;
+  f_table_schema?: InputMaybe<Order_By>;
+  srid?: InputMaybe<Order_By>;
+  type?: InputMaybe<Order_By>;
+};
+
+/** select columns of table "geography_columns" */
+export type Geography_Columns_Select_Column =
+  /** column name */
+  | 'coord_dimension'
+  /** column name */
+  | 'f_geography_column'
+  /** column name */
+  | 'f_table_catalog'
+  /** column name */
+  | 'f_table_name'
+  /** column name */
+  | 'f_table_schema'
+  /** column name */
+  | 'srid'
+  /** column name */
+  | 'type';
+
+/** aggregate stddev on columns */
+export type Geography_Columns_Stddev_Fields = {
+  coord_dimension?: Maybe<Scalars['Float']['output']>;
+  srid?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Geography_Columns_Stddev_Pop_Fields = {
+  coord_dimension?: Maybe<Scalars['Float']['output']>;
+  srid?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Geography_Columns_Stddev_Samp_Fields = {
+  coord_dimension?: Maybe<Scalars['Float']['output']>;
+  srid?: Maybe<Scalars['Float']['output']>;
+};
+
+/** Streaming cursor of the table "geography_columns" */
+export type Geography_Columns_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Geography_Columns_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Geography_Columns_Stream_Cursor_Value_Input = {
+  coord_dimension?: InputMaybe<Scalars['Int']['input']>;
+  f_geography_column?: InputMaybe<Scalars['name']['input']>;
+  f_table_catalog?: InputMaybe<Scalars['name']['input']>;
+  f_table_name?: InputMaybe<Scalars['name']['input']>;
+  f_table_schema?: InputMaybe<Scalars['name']['input']>;
+  srid?: InputMaybe<Scalars['Int']['input']>;
+  type?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate sum on columns */
+export type Geography_Columns_Sum_Fields = {
+  coord_dimension?: Maybe<Scalars['Int']['output']>;
+  srid?: Maybe<Scalars['Int']['output']>;
+};
+
+/** aggregate var_pop on columns */
+export type Geography_Columns_Var_Pop_Fields = {
+  coord_dimension?: Maybe<Scalars['Float']['output']>;
+  srid?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate var_samp on columns */
+export type Geography_Columns_Var_Samp_Fields = {
+  coord_dimension?: Maybe<Scalars['Float']['output']>;
+  srid?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate variance on columns */
+export type Geography_Columns_Variance_Fields = {
+  coord_dimension?: Maybe<Scalars['Float']['output']>;
+  srid?: Maybe<Scalars['Float']['output']>;
 };
 
 /** Boolean expression to compare columns of type "geography". All fields are combined with logical 'AND'. */
@@ -27160,6 +27488,214 @@ export type Geography_Comparison_Exp = {
 
 export type Geometry_Cast_Exp = {
   geography?: InputMaybe<Geography_Comparison_Exp>;
+};
+
+/** columns and relationships of "geometry_columns" */
+export type Geometry_Columns = {
+  coord_dimension?: Maybe<Scalars['Int']['output']>;
+  f_geometry_column?: Maybe<Scalars['name']['output']>;
+  f_table_catalog?: Maybe<Scalars['String']['output']>;
+  f_table_name?: Maybe<Scalars['name']['output']>;
+  f_table_schema?: Maybe<Scalars['name']['output']>;
+  srid?: Maybe<Scalars['Int']['output']>;
+  type?: Maybe<Scalars['String']['output']>;
+};
+
+/** aggregated selection of "geometry_columns" */
+export type Geometry_Columns_Aggregate = {
+  aggregate?: Maybe<Geometry_Columns_Aggregate_Fields>;
+  nodes: Array<Geometry_Columns>;
+};
+
+/** aggregate fields of "geometry_columns" */
+export type Geometry_Columns_Aggregate_Fields = {
+  avg?: Maybe<Geometry_Columns_Avg_Fields>;
+  count: Scalars['Int']['output'];
+  max?: Maybe<Geometry_Columns_Max_Fields>;
+  min?: Maybe<Geometry_Columns_Min_Fields>;
+  stddev?: Maybe<Geometry_Columns_Stddev_Fields>;
+  stddev_pop?: Maybe<Geometry_Columns_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Geometry_Columns_Stddev_Samp_Fields>;
+  sum?: Maybe<Geometry_Columns_Sum_Fields>;
+  var_pop?: Maybe<Geometry_Columns_Var_Pop_Fields>;
+  var_samp?: Maybe<Geometry_Columns_Var_Samp_Fields>;
+  variance?: Maybe<Geometry_Columns_Variance_Fields>;
+};
+
+/** aggregate fields of "geometry_columns" */
+export type Geometry_Columns_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Geometry_Columns_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** aggregate avg on columns */
+export type Geometry_Columns_Avg_Fields = {
+  coord_dimension?: Maybe<Scalars['Float']['output']>;
+  srid?: Maybe<Scalars['Float']['output']>;
+};
+
+/** Boolean expression to filter rows from the table "geometry_columns". All fields are combined with a logical 'AND'. */
+export type Geometry_Columns_Bool_Exp = {
+  _and?: InputMaybe<Array<Geometry_Columns_Bool_Exp>>;
+  _not?: InputMaybe<Geometry_Columns_Bool_Exp>;
+  _or?: InputMaybe<Array<Geometry_Columns_Bool_Exp>>;
+  coord_dimension?: InputMaybe<Int_Comparison_Exp>;
+  f_geometry_column?: InputMaybe<Name_Comparison_Exp>;
+  f_table_catalog?: InputMaybe<String_Comparison_Exp>;
+  f_table_name?: InputMaybe<Name_Comparison_Exp>;
+  f_table_schema?: InputMaybe<Name_Comparison_Exp>;
+  srid?: InputMaybe<Int_Comparison_Exp>;
+  type?: InputMaybe<String_Comparison_Exp>;
+};
+
+/** input type for incrementing numeric columns in table "geometry_columns" */
+export type Geometry_Columns_Inc_Input = {
+  coord_dimension?: InputMaybe<Scalars['Int']['input']>;
+  srid?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** input type for inserting data into table "geometry_columns" */
+export type Geometry_Columns_Insert_Input = {
+  coord_dimension?: InputMaybe<Scalars['Int']['input']>;
+  f_geometry_column?: InputMaybe<Scalars['name']['input']>;
+  f_table_catalog?: InputMaybe<Scalars['String']['input']>;
+  f_table_name?: InputMaybe<Scalars['name']['input']>;
+  f_table_schema?: InputMaybe<Scalars['name']['input']>;
+  srid?: InputMaybe<Scalars['Int']['input']>;
+  type?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate max on columns */
+export type Geometry_Columns_Max_Fields = {
+  coord_dimension?: Maybe<Scalars['Int']['output']>;
+  f_table_catalog?: Maybe<Scalars['String']['output']>;
+  srid?: Maybe<Scalars['Int']['output']>;
+  type?: Maybe<Scalars['String']['output']>;
+};
+
+/** aggregate min on columns */
+export type Geometry_Columns_Min_Fields = {
+  coord_dimension?: Maybe<Scalars['Int']['output']>;
+  f_table_catalog?: Maybe<Scalars['String']['output']>;
+  srid?: Maybe<Scalars['Int']['output']>;
+  type?: Maybe<Scalars['String']['output']>;
+};
+
+/** response of any mutation on the table "geometry_columns" */
+export type Geometry_Columns_Mutation_Response = {
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Geometry_Columns>;
+};
+
+/** Ordering options when selecting data from "geometry_columns". */
+export type Geometry_Columns_Order_By = {
+  coord_dimension?: InputMaybe<Order_By>;
+  f_geometry_column?: InputMaybe<Order_By>;
+  f_table_catalog?: InputMaybe<Order_By>;
+  f_table_name?: InputMaybe<Order_By>;
+  f_table_schema?: InputMaybe<Order_By>;
+  srid?: InputMaybe<Order_By>;
+  type?: InputMaybe<Order_By>;
+};
+
+/** select columns of table "geometry_columns" */
+export type Geometry_Columns_Select_Column =
+  /** column name */
+  | 'coord_dimension'
+  /** column name */
+  | 'f_geometry_column'
+  /** column name */
+  | 'f_table_catalog'
+  /** column name */
+  | 'f_table_name'
+  /** column name */
+  | 'f_table_schema'
+  /** column name */
+  | 'srid'
+  /** column name */
+  | 'type';
+
+/** input type for updating data in table "geometry_columns" */
+export type Geometry_Columns_Set_Input = {
+  coord_dimension?: InputMaybe<Scalars['Int']['input']>;
+  f_geometry_column?: InputMaybe<Scalars['name']['input']>;
+  f_table_catalog?: InputMaybe<Scalars['String']['input']>;
+  f_table_name?: InputMaybe<Scalars['name']['input']>;
+  f_table_schema?: InputMaybe<Scalars['name']['input']>;
+  srid?: InputMaybe<Scalars['Int']['input']>;
+  type?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate stddev on columns */
+export type Geometry_Columns_Stddev_Fields = {
+  coord_dimension?: Maybe<Scalars['Float']['output']>;
+  srid?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Geometry_Columns_Stddev_Pop_Fields = {
+  coord_dimension?: Maybe<Scalars['Float']['output']>;
+  srid?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Geometry_Columns_Stddev_Samp_Fields = {
+  coord_dimension?: Maybe<Scalars['Float']['output']>;
+  srid?: Maybe<Scalars['Float']['output']>;
+};
+
+/** Streaming cursor of the table "geometry_columns" */
+export type Geometry_Columns_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Geometry_Columns_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Geometry_Columns_Stream_Cursor_Value_Input = {
+  coord_dimension?: InputMaybe<Scalars['Int']['input']>;
+  f_geometry_column?: InputMaybe<Scalars['name']['input']>;
+  f_table_catalog?: InputMaybe<Scalars['String']['input']>;
+  f_table_name?: InputMaybe<Scalars['name']['input']>;
+  f_table_schema?: InputMaybe<Scalars['name']['input']>;
+  srid?: InputMaybe<Scalars['Int']['input']>;
+  type?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate sum on columns */
+export type Geometry_Columns_Sum_Fields = {
+  coord_dimension?: Maybe<Scalars['Int']['output']>;
+  srid?: Maybe<Scalars['Int']['output']>;
+};
+
+export type Geometry_Columns_Updates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Geometry_Columns_Inc_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Geometry_Columns_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Geometry_Columns_Bool_Exp;
+};
+
+/** aggregate var_pop on columns */
+export type Geometry_Columns_Var_Pop_Fields = {
+  coord_dimension?: Maybe<Scalars['Float']['output']>;
+  srid?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate var_samp on columns */
+export type Geometry_Columns_Var_Samp_Fields = {
+  coord_dimension?: Maybe<Scalars['Float']['output']>;
+  srid?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate variance on columns */
+export type Geometry_Columns_Variance_Fields = {
+  coord_dimension?: Maybe<Scalars['Float']['output']>;
+  srid?: Maybe<Scalars['Float']['output']>;
 };
 
 /** Boolean expression to compare columns of type "geometry". All fields are combined with logical 'AND'. */
@@ -27371,6 +27907,10 @@ export type Mutation_Root = {
   delete_SendLocalLists?: Maybe<SendLocalLists_Mutation_Response>;
   /** delete single row from the table: "SendLocalLists" */
   delete_SendLocalLists_by_pk?: Maybe<SendLocalLists>;
+  /** delete data from the table: "SequelizeMeta" */
+  delete_SequelizeMeta?: Maybe<SequelizeMeta_Mutation_Response>;
+  /** delete single row from the table: "SequelizeMeta" */
+  delete_SequelizeMeta_by_pk?: Maybe<SequelizeMeta>;
   /** delete data from the table: "ServerNetworkProfiles" */
   delete_ServerNetworkProfiles?: Maybe<ServerNetworkProfiles_Mutation_Response>;
   /** delete single row from the table: "ServerNetworkProfiles" */
@@ -27439,6 +27979,12 @@ export type Mutation_Root = {
   delete_Variables?: Maybe<Variables_Mutation_Response>;
   /** delete single row from the table: "Variables" */
   delete_Variables_by_pk?: Maybe<Variables>;
+  /** delete data from the table: "geometry_columns" */
+  delete_geometry_columns?: Maybe<Geometry_Columns_Mutation_Response>;
+  /** delete data from the table: "spatial_ref_sys" */
+  delete_spatial_ref_sys?: Maybe<Spatial_Ref_Sys_Mutation_Response>;
+  /** delete single row from the table: "spatial_ref_sys" */
+  delete_spatial_ref_sys_by_pk?: Maybe<Spatial_Ref_Sys>;
   /** insert data into the table: "AsyncJobStatuses" */
   insert_AsyncJobStatuses?: Maybe<AsyncJobStatuses_Mutation_Response>;
   /** insert a single row into the table: "AsyncJobStatuses" */
@@ -27571,6 +28117,10 @@ export type Mutation_Root = {
   insert_SendLocalLists?: Maybe<SendLocalLists_Mutation_Response>;
   /** insert a single row into the table: "SendLocalLists" */
   insert_SendLocalLists_one?: Maybe<SendLocalLists>;
+  /** insert data into the table: "SequelizeMeta" */
+  insert_SequelizeMeta?: Maybe<SequelizeMeta_Mutation_Response>;
+  /** insert a single row into the table: "SequelizeMeta" */
+  insert_SequelizeMeta_one?: Maybe<SequelizeMeta>;
   /** insert data into the table: "ServerNetworkProfiles" */
   insert_ServerNetworkProfiles?: Maybe<ServerNetworkProfiles_Mutation_Response>;
   /** insert a single row into the table: "ServerNetworkProfiles" */
@@ -27639,6 +28189,14 @@ export type Mutation_Root = {
   insert_Variables?: Maybe<Variables_Mutation_Response>;
   /** insert a single row into the table: "Variables" */
   insert_Variables_one?: Maybe<Variables>;
+  /** insert data into the table: "geometry_columns" */
+  insert_geometry_columns?: Maybe<Geometry_Columns_Mutation_Response>;
+  /** insert a single row into the table: "geometry_columns" */
+  insert_geometry_columns_one?: Maybe<Geometry_Columns>;
+  /** insert data into the table: "spatial_ref_sys" */
+  insert_spatial_ref_sys?: Maybe<Spatial_Ref_Sys_Mutation_Response>;
+  /** insert a single row into the table: "spatial_ref_sys" */
+  insert_spatial_ref_sys_one?: Maybe<Spatial_Ref_Sys>;
   /** update data of the table: "AsyncJobStatuses" */
   update_AsyncJobStatuses?: Maybe<AsyncJobStatuses_Mutation_Response>;
   /** update single row of the table: "AsyncJobStatuses" */
@@ -27887,6 +28445,14 @@ export type Mutation_Root = {
   update_SendLocalLists_many?: Maybe<
     Array<Maybe<SendLocalLists_Mutation_Response>>
   >;
+  /** update data of the table: "SequelizeMeta" */
+  update_SequelizeMeta?: Maybe<SequelizeMeta_Mutation_Response>;
+  /** update single row of the table: "SequelizeMeta" */
+  update_SequelizeMeta_by_pk?: Maybe<SequelizeMeta>;
+  /** update multiples rows of table: "SequelizeMeta" */
+  update_SequelizeMeta_many?: Maybe<
+    Array<Maybe<SequelizeMeta_Mutation_Response>>
+  >;
   /** update data of the table: "ServerNetworkProfiles" */
   update_ServerNetworkProfiles?: Maybe<ServerNetworkProfiles_Mutation_Response>;
   /** update single row of the table: "ServerNetworkProfiles" */
@@ -28017,6 +28583,20 @@ export type Mutation_Root = {
   update_Variables_by_pk?: Maybe<Variables>;
   /** update multiples rows of table: "Variables" */
   update_Variables_many?: Maybe<Array<Maybe<Variables_Mutation_Response>>>;
+  /** update data of the table: "geometry_columns" */
+  update_geometry_columns?: Maybe<Geometry_Columns_Mutation_Response>;
+  /** update multiples rows of table: "geometry_columns" */
+  update_geometry_columns_many?: Maybe<
+    Array<Maybe<Geometry_Columns_Mutation_Response>>
+  >;
+  /** update data of the table: "spatial_ref_sys" */
+  update_spatial_ref_sys?: Maybe<Spatial_Ref_Sys_Mutation_Response>;
+  /** update single row of the table: "spatial_ref_sys" */
+  update_spatial_ref_sys_by_pk?: Maybe<Spatial_Ref_Sys>;
+  /** update multiples rows of table: "spatial_ref_sys" */
+  update_spatial_ref_sys_many?: Maybe<
+    Array<Maybe<Spatial_Ref_Sys_Mutation_Response>>
+  >;
 };
 
 /** mutation root */
@@ -28354,6 +28934,16 @@ export type Mutation_RootDelete_SendLocalLists_By_PkArgs = {
 };
 
 /** mutation root */
+export type Mutation_RootDelete_SequelizeMetaArgs = {
+  where: SequelizeMeta_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootDelete_SequelizeMeta_By_PkArgs = {
+  name: Scalars['String']['input'];
+};
+
+/** mutation root */
 export type Mutation_RootDelete_ServerNetworkProfilesArgs = {
   where: ServerNetworkProfiles_Bool_Exp;
 };
@@ -28521,6 +29111,21 @@ export type Mutation_RootDelete_VariablesArgs = {
 /** mutation root */
 export type Mutation_RootDelete_Variables_By_PkArgs = {
   id: Scalars['Int']['input'];
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Geometry_ColumnsArgs = {
+  where: Geometry_Columns_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Spatial_Ref_SysArgs = {
+  where: Spatial_Ref_Sys_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Spatial_Ref_Sys_By_PkArgs = {
+  srid: Scalars['Int']['input'];
 };
 
 /** mutation root */
@@ -28920,6 +29525,18 @@ export type Mutation_RootInsert_SendLocalLists_OneArgs = {
 };
 
 /** mutation root */
+export type Mutation_RootInsert_SequelizeMetaArgs = {
+  objects: Array<SequelizeMeta_Insert_Input>;
+  on_conflict?: InputMaybe<SequelizeMeta_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_SequelizeMeta_OneArgs = {
+  object: SequelizeMeta_Insert_Input;
+  on_conflict?: InputMaybe<SequelizeMeta_On_Conflict>;
+};
+
+/** mutation root */
 export type Mutation_RootInsert_ServerNetworkProfilesArgs = {
   objects: Array<ServerNetworkProfiles_Insert_Input>;
   on_conflict?: InputMaybe<ServerNetworkProfiles_On_Conflict>;
@@ -29121,6 +29738,28 @@ export type Mutation_RootInsert_VariablesArgs = {
 export type Mutation_RootInsert_Variables_OneArgs = {
   object: Variables_Insert_Input;
   on_conflict?: InputMaybe<Variables_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Geometry_ColumnsArgs = {
+  objects: Array<Geometry_Columns_Insert_Input>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Geometry_Columns_OneArgs = {
+  object: Geometry_Columns_Insert_Input;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Spatial_Ref_SysArgs = {
+  objects: Array<Spatial_Ref_Sys_Insert_Input>;
+  on_conflict?: InputMaybe<Spatial_Ref_Sys_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Spatial_Ref_Sys_OneArgs = {
+  object: Spatial_Ref_Sys_Insert_Input;
+  on_conflict?: InputMaybe<Spatial_Ref_Sys_On_Conflict>;
 };
 
 /** mutation root */
@@ -29861,6 +30500,23 @@ export type Mutation_RootUpdate_SendLocalLists_ManyArgs = {
 };
 
 /** mutation root */
+export type Mutation_RootUpdate_SequelizeMetaArgs = {
+  _set?: InputMaybe<SequelizeMeta_Set_Input>;
+  where: SequelizeMeta_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_SequelizeMeta_By_PkArgs = {
+  _set?: InputMaybe<SequelizeMeta_Set_Input>;
+  pk_columns: SequelizeMeta_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_SequelizeMeta_ManyArgs = {
+  updates: Array<SequelizeMeta_Updates>;
+};
+
+/** mutation root */
 export type Mutation_RootUpdate_ServerNetworkProfilesArgs = {
   _inc?: InputMaybe<ServerNetworkProfiles_Inc_Input>;
   _set?: InputMaybe<ServerNetworkProfiles_Set_Input>;
@@ -30213,6 +30869,50 @@ export type Mutation_RootUpdate_Variables_ManyArgs = {
   updates: Array<Variables_Updates>;
 };
 
+/** mutation root */
+export type Mutation_RootUpdate_Geometry_ColumnsArgs = {
+  _inc?: InputMaybe<Geometry_Columns_Inc_Input>;
+  _set?: InputMaybe<Geometry_Columns_Set_Input>;
+  where: Geometry_Columns_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Geometry_Columns_ManyArgs = {
+  updates: Array<Geometry_Columns_Updates>;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Spatial_Ref_SysArgs = {
+  _inc?: InputMaybe<Spatial_Ref_Sys_Inc_Input>;
+  _set?: InputMaybe<Spatial_Ref_Sys_Set_Input>;
+  where: Spatial_Ref_Sys_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Spatial_Ref_Sys_By_PkArgs = {
+  _inc?: InputMaybe<Spatial_Ref_Sys_Inc_Input>;
+  _set?: InputMaybe<Spatial_Ref_Sys_Set_Input>;
+  pk_columns: Spatial_Ref_Sys_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Spatial_Ref_Sys_ManyArgs = {
+  updates: Array<Spatial_Ref_Sys_Updates>;
+};
+
+/** Boolean expression to compare columns of type "name". All fields are combined with logical 'AND'. */
+export type Name_Comparison_Exp = {
+  _eq?: InputMaybe<Scalars['name']['input']>;
+  _gt?: InputMaybe<Scalars['name']['input']>;
+  _gte?: InputMaybe<Scalars['name']['input']>;
+  _in?: InputMaybe<Array<Scalars['name']['input']>>;
+  _is_null?: InputMaybe<Scalars['Boolean']['input']>;
+  _lt?: InputMaybe<Scalars['name']['input']>;
+  _lte?: InputMaybe<Scalars['name']['input']>;
+  _neq?: InputMaybe<Scalars['name']['input']>;
+  _nin?: InputMaybe<Array<Scalars['name']['input']>>;
+};
+
 /** Boolean expression to compare columns of type "numeric". All fields are combined with logical 'AND'. */
 export type Numeric_Comparison_Exp = {
   _eq?: InputMaybe<Scalars['numeric']['input']>;
@@ -30440,6 +31140,12 @@ export type Query_Root = {
   SendLocalLists_aggregate: SendLocalLists_Aggregate;
   /** fetch data from the table: "SendLocalLists" using primary key columns */
   SendLocalLists_by_pk?: Maybe<SendLocalLists>;
+  /** fetch data from the table: "SequelizeMeta" */
+  SequelizeMeta: Array<SequelizeMeta>;
+  /** fetch aggregated fields from the table: "SequelizeMeta" */
+  SequelizeMeta_aggregate: SequelizeMeta_Aggregate;
+  /** fetch data from the table: "SequelizeMeta" using primary key columns */
+  SequelizeMeta_by_pk?: Maybe<SequelizeMeta>;
   /** An array relationship */
   ServerNetworkProfiles: Array<ServerNetworkProfiles>;
   /** An aggregate relationship */
@@ -30542,6 +31248,28 @@ export type Query_Root = {
   Variables_aggregate: Variables_Aggregate;
   /** fetch data from the table: "Variables" using primary key columns */
   Variables_by_pk?: Maybe<Variables>;
+  /** fetch data from the table: "geography_columns" */
+  geography_columns: Array<Geography_Columns>;
+  /** fetch aggregated fields from the table: "geography_columns" */
+  geography_columns_aggregate: Geography_Columns_Aggregate;
+  /** fetch data from the table: "geometry_columns" */
+  geometry_columns: Array<Geometry_Columns>;
+  /** fetch aggregated fields from the table: "geometry_columns" */
+  geometry_columns_aggregate: Geometry_Columns_Aggregate;
+  /** fetch data from the table: "raster_columns" */
+  raster_columns: Array<Raster_Columns>;
+  /** fetch aggregated fields from the table: "raster_columns" */
+  raster_columns_aggregate: Raster_Columns_Aggregate;
+  /** fetch data from the table: "raster_overviews" */
+  raster_overviews: Array<Raster_Overviews>;
+  /** fetch aggregated fields from the table: "raster_overviews" */
+  raster_overviews_aggregate: Raster_Overviews_Aggregate;
+  /** fetch data from the table: "spatial_ref_sys" */
+  spatial_ref_sys: Array<Spatial_Ref_Sys>;
+  /** fetch aggregated fields from the table: "spatial_ref_sys" */
+  spatial_ref_sys_aggregate: Spatial_Ref_Sys_Aggregate;
+  /** fetch data from the table: "spatial_ref_sys" using primary key columns */
+  spatial_ref_sys_by_pk?: Maybe<Spatial_Ref_Sys>;
 };
 
 export type Query_RootAsyncJobStatusesArgs = {
@@ -31208,6 +31936,26 @@ export type Query_RootSendLocalLists_By_PkArgs = {
   id: Scalars['Int']['input'];
 };
 
+export type Query_RootSequelizeMetaArgs = {
+  distinct_on?: InputMaybe<Array<SequelizeMeta_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<SequelizeMeta_Order_By>>;
+  where?: InputMaybe<SequelizeMeta_Bool_Exp>;
+};
+
+export type Query_RootSequelizeMeta_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<SequelizeMeta_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<SequelizeMeta_Order_By>>;
+  where?: InputMaybe<SequelizeMeta_Bool_Exp>;
+};
+
+export type Query_RootSequelizeMeta_By_PkArgs = {
+  name: Scalars['String']['input'];
+};
+
 export type Query_RootServerNetworkProfilesArgs = {
   distinct_on?: InputMaybe<Array<ServerNetworkProfiles_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -31548,6 +32296,740 @@ export type Query_RootVariables_By_PkArgs = {
   id: Scalars['Int']['input'];
 };
 
+export type Query_RootGeography_ColumnsArgs = {
+  distinct_on?: InputMaybe<Array<Geography_Columns_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Geography_Columns_Order_By>>;
+  where?: InputMaybe<Geography_Columns_Bool_Exp>;
+};
+
+export type Query_RootGeography_Columns_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Geography_Columns_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Geography_Columns_Order_By>>;
+  where?: InputMaybe<Geography_Columns_Bool_Exp>;
+};
+
+export type Query_RootGeometry_ColumnsArgs = {
+  distinct_on?: InputMaybe<Array<Geometry_Columns_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Geometry_Columns_Order_By>>;
+  where?: InputMaybe<Geometry_Columns_Bool_Exp>;
+};
+
+export type Query_RootGeometry_Columns_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Geometry_Columns_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Geometry_Columns_Order_By>>;
+  where?: InputMaybe<Geometry_Columns_Bool_Exp>;
+};
+
+export type Query_RootRaster_ColumnsArgs = {
+  distinct_on?: InputMaybe<Array<Raster_Columns_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Raster_Columns_Order_By>>;
+  where?: InputMaybe<Raster_Columns_Bool_Exp>;
+};
+
+export type Query_RootRaster_Columns_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Raster_Columns_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Raster_Columns_Order_By>>;
+  where?: InputMaybe<Raster_Columns_Bool_Exp>;
+};
+
+export type Query_RootRaster_OverviewsArgs = {
+  distinct_on?: InputMaybe<Array<Raster_Overviews_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Raster_Overviews_Order_By>>;
+  where?: InputMaybe<Raster_Overviews_Bool_Exp>;
+};
+
+export type Query_RootRaster_Overviews_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Raster_Overviews_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Raster_Overviews_Order_By>>;
+  where?: InputMaybe<Raster_Overviews_Bool_Exp>;
+};
+
+export type Query_RootSpatial_Ref_SysArgs = {
+  distinct_on?: InputMaybe<Array<Spatial_Ref_Sys_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Spatial_Ref_Sys_Order_By>>;
+  where?: InputMaybe<Spatial_Ref_Sys_Bool_Exp>;
+};
+
+export type Query_RootSpatial_Ref_Sys_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Spatial_Ref_Sys_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Spatial_Ref_Sys_Order_By>>;
+  where?: InputMaybe<Spatial_Ref_Sys_Bool_Exp>;
+};
+
+export type Query_RootSpatial_Ref_Sys_By_PkArgs = {
+  srid: Scalars['Int']['input'];
+};
+
+/** columns and relationships of "raster_columns" */
+export type Raster_Columns = {
+  blocksize_x?: Maybe<Scalars['Int']['output']>;
+  blocksize_y?: Maybe<Scalars['Int']['output']>;
+  extent?: Maybe<Scalars['geometry']['output']>;
+  nodata_values?: Maybe<Array<Scalars['float8']['output']>>;
+  num_bands?: Maybe<Scalars['Int']['output']>;
+  out_db?: Maybe<Array<Scalars['Boolean']['output']>>;
+  pixel_types?: Maybe<Array<Scalars['String']['output']>>;
+  r_raster_column?: Maybe<Scalars['name']['output']>;
+  r_table_catalog?: Maybe<Scalars['name']['output']>;
+  r_table_name?: Maybe<Scalars['name']['output']>;
+  r_table_schema?: Maybe<Scalars['name']['output']>;
+  regular_blocking?: Maybe<Scalars['Boolean']['output']>;
+  same_alignment?: Maybe<Scalars['Boolean']['output']>;
+  scale_x?: Maybe<Scalars['float8']['output']>;
+  scale_y?: Maybe<Scalars['float8']['output']>;
+  spatial_index?: Maybe<Scalars['Boolean']['output']>;
+  srid?: Maybe<Scalars['Int']['output']>;
+};
+
+/** aggregated selection of "raster_columns" */
+export type Raster_Columns_Aggregate = {
+  aggregate?: Maybe<Raster_Columns_Aggregate_Fields>;
+  nodes: Array<Raster_Columns>;
+};
+
+/** aggregate fields of "raster_columns" */
+export type Raster_Columns_Aggregate_Fields = {
+  avg?: Maybe<Raster_Columns_Avg_Fields>;
+  count: Scalars['Int']['output'];
+  max?: Maybe<Raster_Columns_Max_Fields>;
+  min?: Maybe<Raster_Columns_Min_Fields>;
+  stddev?: Maybe<Raster_Columns_Stddev_Fields>;
+  stddev_pop?: Maybe<Raster_Columns_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Raster_Columns_Stddev_Samp_Fields>;
+  sum?: Maybe<Raster_Columns_Sum_Fields>;
+  var_pop?: Maybe<Raster_Columns_Var_Pop_Fields>;
+  var_samp?: Maybe<Raster_Columns_Var_Samp_Fields>;
+  variance?: Maybe<Raster_Columns_Variance_Fields>;
+};
+
+/** aggregate fields of "raster_columns" */
+export type Raster_Columns_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Raster_Columns_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** aggregate avg on columns */
+export type Raster_Columns_Avg_Fields = {
+  blocksize_x?: Maybe<Scalars['Float']['output']>;
+  blocksize_y?: Maybe<Scalars['Float']['output']>;
+  num_bands?: Maybe<Scalars['Float']['output']>;
+  scale_x?: Maybe<Scalars['Float']['output']>;
+  scale_y?: Maybe<Scalars['Float']['output']>;
+  srid?: Maybe<Scalars['Float']['output']>;
+};
+
+/** Boolean expression to filter rows from the table "raster_columns". All fields are combined with a logical 'AND'. */
+export type Raster_Columns_Bool_Exp = {
+  _and?: InputMaybe<Array<Raster_Columns_Bool_Exp>>;
+  _not?: InputMaybe<Raster_Columns_Bool_Exp>;
+  _or?: InputMaybe<Array<Raster_Columns_Bool_Exp>>;
+  blocksize_x?: InputMaybe<Int_Comparison_Exp>;
+  blocksize_y?: InputMaybe<Int_Comparison_Exp>;
+  extent?: InputMaybe<Geometry_Comparison_Exp>;
+  nodata_values?: InputMaybe<Float8_Array_Comparison_Exp>;
+  num_bands?: InputMaybe<Int_Comparison_Exp>;
+  out_db?: InputMaybe<Boolean_Array_Comparison_Exp>;
+  pixel_types?: InputMaybe<String_Array_Comparison_Exp>;
+  r_raster_column?: InputMaybe<Name_Comparison_Exp>;
+  r_table_catalog?: InputMaybe<Name_Comparison_Exp>;
+  r_table_name?: InputMaybe<Name_Comparison_Exp>;
+  r_table_schema?: InputMaybe<Name_Comparison_Exp>;
+  regular_blocking?: InputMaybe<Boolean_Comparison_Exp>;
+  same_alignment?: InputMaybe<Boolean_Comparison_Exp>;
+  scale_x?: InputMaybe<Float8_Comparison_Exp>;
+  scale_y?: InputMaybe<Float8_Comparison_Exp>;
+  spatial_index?: InputMaybe<Boolean_Comparison_Exp>;
+  srid?: InputMaybe<Int_Comparison_Exp>;
+};
+
+/** aggregate max on columns */
+export type Raster_Columns_Max_Fields = {
+  blocksize_x?: Maybe<Scalars['Int']['output']>;
+  blocksize_y?: Maybe<Scalars['Int']['output']>;
+  nodata_values?: Maybe<Array<Scalars['float8']['output']>>;
+  num_bands?: Maybe<Scalars['Int']['output']>;
+  out_db?: Maybe<Array<Scalars['Boolean']['output']>>;
+  pixel_types?: Maybe<Array<Scalars['String']['output']>>;
+  scale_x?: Maybe<Scalars['float8']['output']>;
+  scale_y?: Maybe<Scalars['float8']['output']>;
+  srid?: Maybe<Scalars['Int']['output']>;
+};
+
+/** aggregate min on columns */
+export type Raster_Columns_Min_Fields = {
+  blocksize_x?: Maybe<Scalars['Int']['output']>;
+  blocksize_y?: Maybe<Scalars['Int']['output']>;
+  nodata_values?: Maybe<Array<Scalars['float8']['output']>>;
+  num_bands?: Maybe<Scalars['Int']['output']>;
+  out_db?: Maybe<Array<Scalars['Boolean']['output']>>;
+  pixel_types?: Maybe<Array<Scalars['String']['output']>>;
+  scale_x?: Maybe<Scalars['float8']['output']>;
+  scale_y?: Maybe<Scalars['float8']['output']>;
+  srid?: Maybe<Scalars['Int']['output']>;
+};
+
+/** Ordering options when selecting data from "raster_columns". */
+export type Raster_Columns_Order_By = {
+  blocksize_x?: InputMaybe<Order_By>;
+  blocksize_y?: InputMaybe<Order_By>;
+  extent?: InputMaybe<Order_By>;
+  nodata_values?: InputMaybe<Order_By>;
+  num_bands?: InputMaybe<Order_By>;
+  out_db?: InputMaybe<Order_By>;
+  pixel_types?: InputMaybe<Order_By>;
+  r_raster_column?: InputMaybe<Order_By>;
+  r_table_catalog?: InputMaybe<Order_By>;
+  r_table_name?: InputMaybe<Order_By>;
+  r_table_schema?: InputMaybe<Order_By>;
+  regular_blocking?: InputMaybe<Order_By>;
+  same_alignment?: InputMaybe<Order_By>;
+  scale_x?: InputMaybe<Order_By>;
+  scale_y?: InputMaybe<Order_By>;
+  spatial_index?: InputMaybe<Order_By>;
+  srid?: InputMaybe<Order_By>;
+};
+
+/** select columns of table "raster_columns" */
+export type Raster_Columns_Select_Column =
+  /** column name */
+  | 'blocksize_x'
+  /** column name */
+  | 'blocksize_y'
+  /** column name */
+  | 'extent'
+  /** column name */
+  | 'nodata_values'
+  /** column name */
+  | 'num_bands'
+  /** column name */
+  | 'out_db'
+  /** column name */
+  | 'pixel_types'
+  /** column name */
+  | 'r_raster_column'
+  /** column name */
+  | 'r_table_catalog'
+  /** column name */
+  | 'r_table_name'
+  /** column name */
+  | 'r_table_schema'
+  /** column name */
+  | 'regular_blocking'
+  /** column name */
+  | 'same_alignment'
+  /** column name */
+  | 'scale_x'
+  /** column name */
+  | 'scale_y'
+  /** column name */
+  | 'spatial_index'
+  /** column name */
+  | 'srid';
+
+/** aggregate stddev on columns */
+export type Raster_Columns_Stddev_Fields = {
+  blocksize_x?: Maybe<Scalars['Float']['output']>;
+  blocksize_y?: Maybe<Scalars['Float']['output']>;
+  num_bands?: Maybe<Scalars['Float']['output']>;
+  scale_x?: Maybe<Scalars['Float']['output']>;
+  scale_y?: Maybe<Scalars['Float']['output']>;
+  srid?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Raster_Columns_Stddev_Pop_Fields = {
+  blocksize_x?: Maybe<Scalars['Float']['output']>;
+  blocksize_y?: Maybe<Scalars['Float']['output']>;
+  num_bands?: Maybe<Scalars['Float']['output']>;
+  scale_x?: Maybe<Scalars['Float']['output']>;
+  scale_y?: Maybe<Scalars['Float']['output']>;
+  srid?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Raster_Columns_Stddev_Samp_Fields = {
+  blocksize_x?: Maybe<Scalars['Float']['output']>;
+  blocksize_y?: Maybe<Scalars['Float']['output']>;
+  num_bands?: Maybe<Scalars['Float']['output']>;
+  scale_x?: Maybe<Scalars['Float']['output']>;
+  scale_y?: Maybe<Scalars['Float']['output']>;
+  srid?: Maybe<Scalars['Float']['output']>;
+};
+
+/** Streaming cursor of the table "raster_columns" */
+export type Raster_Columns_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Raster_Columns_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Raster_Columns_Stream_Cursor_Value_Input = {
+  blocksize_x?: InputMaybe<Scalars['Int']['input']>;
+  blocksize_y?: InputMaybe<Scalars['Int']['input']>;
+  extent?: InputMaybe<Scalars['geometry']['input']>;
+  nodata_values?: InputMaybe<Array<Scalars['float8']['input']>>;
+  num_bands?: InputMaybe<Scalars['Int']['input']>;
+  out_db?: InputMaybe<Array<Scalars['Boolean']['input']>>;
+  pixel_types?: InputMaybe<Array<Scalars['String']['input']>>;
+  r_raster_column?: InputMaybe<Scalars['name']['input']>;
+  r_table_catalog?: InputMaybe<Scalars['name']['input']>;
+  r_table_name?: InputMaybe<Scalars['name']['input']>;
+  r_table_schema?: InputMaybe<Scalars['name']['input']>;
+  regular_blocking?: InputMaybe<Scalars['Boolean']['input']>;
+  same_alignment?: InputMaybe<Scalars['Boolean']['input']>;
+  scale_x?: InputMaybe<Scalars['float8']['input']>;
+  scale_y?: InputMaybe<Scalars['float8']['input']>;
+  spatial_index?: InputMaybe<Scalars['Boolean']['input']>;
+  srid?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** aggregate sum on columns */
+export type Raster_Columns_Sum_Fields = {
+  blocksize_x?: Maybe<Scalars['Int']['output']>;
+  blocksize_y?: Maybe<Scalars['Int']['output']>;
+  num_bands?: Maybe<Scalars['Int']['output']>;
+  scale_x?: Maybe<Scalars['float8']['output']>;
+  scale_y?: Maybe<Scalars['float8']['output']>;
+  srid?: Maybe<Scalars['Int']['output']>;
+};
+
+/** aggregate var_pop on columns */
+export type Raster_Columns_Var_Pop_Fields = {
+  blocksize_x?: Maybe<Scalars['Float']['output']>;
+  blocksize_y?: Maybe<Scalars['Float']['output']>;
+  num_bands?: Maybe<Scalars['Float']['output']>;
+  scale_x?: Maybe<Scalars['Float']['output']>;
+  scale_y?: Maybe<Scalars['Float']['output']>;
+  srid?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate var_samp on columns */
+export type Raster_Columns_Var_Samp_Fields = {
+  blocksize_x?: Maybe<Scalars['Float']['output']>;
+  blocksize_y?: Maybe<Scalars['Float']['output']>;
+  num_bands?: Maybe<Scalars['Float']['output']>;
+  scale_x?: Maybe<Scalars['Float']['output']>;
+  scale_y?: Maybe<Scalars['Float']['output']>;
+  srid?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate variance on columns */
+export type Raster_Columns_Variance_Fields = {
+  blocksize_x?: Maybe<Scalars['Float']['output']>;
+  blocksize_y?: Maybe<Scalars['Float']['output']>;
+  num_bands?: Maybe<Scalars['Float']['output']>;
+  scale_x?: Maybe<Scalars['Float']['output']>;
+  scale_y?: Maybe<Scalars['Float']['output']>;
+  srid?: Maybe<Scalars['Float']['output']>;
+};
+
+/** columns and relationships of "raster_overviews" */
+export type Raster_Overviews = {
+  o_raster_column?: Maybe<Scalars['name']['output']>;
+  o_table_catalog?: Maybe<Scalars['name']['output']>;
+  o_table_name?: Maybe<Scalars['name']['output']>;
+  o_table_schema?: Maybe<Scalars['name']['output']>;
+  overview_factor?: Maybe<Scalars['Int']['output']>;
+  r_raster_column?: Maybe<Scalars['name']['output']>;
+  r_table_catalog?: Maybe<Scalars['name']['output']>;
+  r_table_name?: Maybe<Scalars['name']['output']>;
+  r_table_schema?: Maybe<Scalars['name']['output']>;
+};
+
+/** aggregated selection of "raster_overviews" */
+export type Raster_Overviews_Aggregate = {
+  aggregate?: Maybe<Raster_Overviews_Aggregate_Fields>;
+  nodes: Array<Raster_Overviews>;
+};
+
+/** aggregate fields of "raster_overviews" */
+export type Raster_Overviews_Aggregate_Fields = {
+  avg?: Maybe<Raster_Overviews_Avg_Fields>;
+  count: Scalars['Int']['output'];
+  max?: Maybe<Raster_Overviews_Max_Fields>;
+  min?: Maybe<Raster_Overviews_Min_Fields>;
+  stddev?: Maybe<Raster_Overviews_Stddev_Fields>;
+  stddev_pop?: Maybe<Raster_Overviews_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Raster_Overviews_Stddev_Samp_Fields>;
+  sum?: Maybe<Raster_Overviews_Sum_Fields>;
+  var_pop?: Maybe<Raster_Overviews_Var_Pop_Fields>;
+  var_samp?: Maybe<Raster_Overviews_Var_Samp_Fields>;
+  variance?: Maybe<Raster_Overviews_Variance_Fields>;
+};
+
+/** aggregate fields of "raster_overviews" */
+export type Raster_Overviews_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Raster_Overviews_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** aggregate avg on columns */
+export type Raster_Overviews_Avg_Fields = {
+  overview_factor?: Maybe<Scalars['Float']['output']>;
+};
+
+/** Boolean expression to filter rows from the table "raster_overviews". All fields are combined with a logical 'AND'. */
+export type Raster_Overviews_Bool_Exp = {
+  _and?: InputMaybe<Array<Raster_Overviews_Bool_Exp>>;
+  _not?: InputMaybe<Raster_Overviews_Bool_Exp>;
+  _or?: InputMaybe<Array<Raster_Overviews_Bool_Exp>>;
+  o_raster_column?: InputMaybe<Name_Comparison_Exp>;
+  o_table_catalog?: InputMaybe<Name_Comparison_Exp>;
+  o_table_name?: InputMaybe<Name_Comparison_Exp>;
+  o_table_schema?: InputMaybe<Name_Comparison_Exp>;
+  overview_factor?: InputMaybe<Int_Comparison_Exp>;
+  r_raster_column?: InputMaybe<Name_Comparison_Exp>;
+  r_table_catalog?: InputMaybe<Name_Comparison_Exp>;
+  r_table_name?: InputMaybe<Name_Comparison_Exp>;
+  r_table_schema?: InputMaybe<Name_Comparison_Exp>;
+};
+
+/** aggregate max on columns */
+export type Raster_Overviews_Max_Fields = {
+  overview_factor?: Maybe<Scalars['Int']['output']>;
+};
+
+/** aggregate min on columns */
+export type Raster_Overviews_Min_Fields = {
+  overview_factor?: Maybe<Scalars['Int']['output']>;
+};
+
+/** Ordering options when selecting data from "raster_overviews". */
+export type Raster_Overviews_Order_By = {
+  o_raster_column?: InputMaybe<Order_By>;
+  o_table_catalog?: InputMaybe<Order_By>;
+  o_table_name?: InputMaybe<Order_By>;
+  o_table_schema?: InputMaybe<Order_By>;
+  overview_factor?: InputMaybe<Order_By>;
+  r_raster_column?: InputMaybe<Order_By>;
+  r_table_catalog?: InputMaybe<Order_By>;
+  r_table_name?: InputMaybe<Order_By>;
+  r_table_schema?: InputMaybe<Order_By>;
+};
+
+/** select columns of table "raster_overviews" */
+export type Raster_Overviews_Select_Column =
+  /** column name */
+  | 'o_raster_column'
+  /** column name */
+  | 'o_table_catalog'
+  /** column name */
+  | 'o_table_name'
+  /** column name */
+  | 'o_table_schema'
+  /** column name */
+  | 'overview_factor'
+  /** column name */
+  | 'r_raster_column'
+  /** column name */
+  | 'r_table_catalog'
+  /** column name */
+  | 'r_table_name'
+  /** column name */
+  | 'r_table_schema';
+
+/** aggregate stddev on columns */
+export type Raster_Overviews_Stddev_Fields = {
+  overview_factor?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Raster_Overviews_Stddev_Pop_Fields = {
+  overview_factor?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Raster_Overviews_Stddev_Samp_Fields = {
+  overview_factor?: Maybe<Scalars['Float']['output']>;
+};
+
+/** Streaming cursor of the table "raster_overviews" */
+export type Raster_Overviews_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Raster_Overviews_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Raster_Overviews_Stream_Cursor_Value_Input = {
+  o_raster_column?: InputMaybe<Scalars['name']['input']>;
+  o_table_catalog?: InputMaybe<Scalars['name']['input']>;
+  o_table_name?: InputMaybe<Scalars['name']['input']>;
+  o_table_schema?: InputMaybe<Scalars['name']['input']>;
+  overview_factor?: InputMaybe<Scalars['Int']['input']>;
+  r_raster_column?: InputMaybe<Scalars['name']['input']>;
+  r_table_catalog?: InputMaybe<Scalars['name']['input']>;
+  r_table_name?: InputMaybe<Scalars['name']['input']>;
+  r_table_schema?: InputMaybe<Scalars['name']['input']>;
+};
+
+/** aggregate sum on columns */
+export type Raster_Overviews_Sum_Fields = {
+  overview_factor?: Maybe<Scalars['Int']['output']>;
+};
+
+/** aggregate var_pop on columns */
+export type Raster_Overviews_Var_Pop_Fields = {
+  overview_factor?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate var_samp on columns */
+export type Raster_Overviews_Var_Samp_Fields = {
+  overview_factor?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate variance on columns */
+export type Raster_Overviews_Variance_Fields = {
+  overview_factor?: Maybe<Scalars['Float']['output']>;
+};
+
+/** columns and relationships of "spatial_ref_sys" */
+export type Spatial_Ref_Sys = {
+  auth_name?: Maybe<Scalars['String']['output']>;
+  auth_srid?: Maybe<Scalars['Int']['output']>;
+  proj4text?: Maybe<Scalars['String']['output']>;
+  srid: Scalars['Int']['output'];
+  srtext?: Maybe<Scalars['String']['output']>;
+};
+
+/** aggregated selection of "spatial_ref_sys" */
+export type Spatial_Ref_Sys_Aggregate = {
+  aggregate?: Maybe<Spatial_Ref_Sys_Aggregate_Fields>;
+  nodes: Array<Spatial_Ref_Sys>;
+};
+
+/** aggregate fields of "spatial_ref_sys" */
+export type Spatial_Ref_Sys_Aggregate_Fields = {
+  avg?: Maybe<Spatial_Ref_Sys_Avg_Fields>;
+  count: Scalars['Int']['output'];
+  max?: Maybe<Spatial_Ref_Sys_Max_Fields>;
+  min?: Maybe<Spatial_Ref_Sys_Min_Fields>;
+  stddev?: Maybe<Spatial_Ref_Sys_Stddev_Fields>;
+  stddev_pop?: Maybe<Spatial_Ref_Sys_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Spatial_Ref_Sys_Stddev_Samp_Fields>;
+  sum?: Maybe<Spatial_Ref_Sys_Sum_Fields>;
+  var_pop?: Maybe<Spatial_Ref_Sys_Var_Pop_Fields>;
+  var_samp?: Maybe<Spatial_Ref_Sys_Var_Samp_Fields>;
+  variance?: Maybe<Spatial_Ref_Sys_Variance_Fields>;
+};
+
+/** aggregate fields of "spatial_ref_sys" */
+export type Spatial_Ref_Sys_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Spatial_Ref_Sys_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** aggregate avg on columns */
+export type Spatial_Ref_Sys_Avg_Fields = {
+  auth_srid?: Maybe<Scalars['Float']['output']>;
+  srid?: Maybe<Scalars['Float']['output']>;
+};
+
+/** Boolean expression to filter rows from the table "spatial_ref_sys". All fields are combined with a logical 'AND'. */
+export type Spatial_Ref_Sys_Bool_Exp = {
+  _and?: InputMaybe<Array<Spatial_Ref_Sys_Bool_Exp>>;
+  _not?: InputMaybe<Spatial_Ref_Sys_Bool_Exp>;
+  _or?: InputMaybe<Array<Spatial_Ref_Sys_Bool_Exp>>;
+  auth_name?: InputMaybe<String_Comparison_Exp>;
+  auth_srid?: InputMaybe<Int_Comparison_Exp>;
+  proj4text?: InputMaybe<String_Comparison_Exp>;
+  srid?: InputMaybe<Int_Comparison_Exp>;
+  srtext?: InputMaybe<String_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "spatial_ref_sys" */
+export type Spatial_Ref_Sys_Constraint =
+  /** unique or primary key constraint on columns "srid" */
+  'spatial_ref_sys_pkey';
+
+/** input type for incrementing numeric columns in table "spatial_ref_sys" */
+export type Spatial_Ref_Sys_Inc_Input = {
+  auth_srid?: InputMaybe<Scalars['Int']['input']>;
+  srid?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** input type for inserting data into table "spatial_ref_sys" */
+export type Spatial_Ref_Sys_Insert_Input = {
+  auth_name?: InputMaybe<Scalars['String']['input']>;
+  auth_srid?: InputMaybe<Scalars['Int']['input']>;
+  proj4text?: InputMaybe<Scalars['String']['input']>;
+  srid?: InputMaybe<Scalars['Int']['input']>;
+  srtext?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate max on columns */
+export type Spatial_Ref_Sys_Max_Fields = {
+  auth_name?: Maybe<Scalars['String']['output']>;
+  auth_srid?: Maybe<Scalars['Int']['output']>;
+  proj4text?: Maybe<Scalars['String']['output']>;
+  srid?: Maybe<Scalars['Int']['output']>;
+  srtext?: Maybe<Scalars['String']['output']>;
+};
+
+/** aggregate min on columns */
+export type Spatial_Ref_Sys_Min_Fields = {
+  auth_name?: Maybe<Scalars['String']['output']>;
+  auth_srid?: Maybe<Scalars['Int']['output']>;
+  proj4text?: Maybe<Scalars['String']['output']>;
+  srid?: Maybe<Scalars['Int']['output']>;
+  srtext?: Maybe<Scalars['String']['output']>;
+};
+
+/** response of any mutation on the table "spatial_ref_sys" */
+export type Spatial_Ref_Sys_Mutation_Response = {
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Spatial_Ref_Sys>;
+};
+
+/** on_conflict condition type for table "spatial_ref_sys" */
+export type Spatial_Ref_Sys_On_Conflict = {
+  constraint: Spatial_Ref_Sys_Constraint;
+  update_columns?: Array<Spatial_Ref_Sys_Update_Column>;
+  where?: InputMaybe<Spatial_Ref_Sys_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "spatial_ref_sys". */
+export type Spatial_Ref_Sys_Order_By = {
+  auth_name?: InputMaybe<Order_By>;
+  auth_srid?: InputMaybe<Order_By>;
+  proj4text?: InputMaybe<Order_By>;
+  srid?: InputMaybe<Order_By>;
+  srtext?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: spatial_ref_sys */
+export type Spatial_Ref_Sys_Pk_Columns_Input = {
+  srid: Scalars['Int']['input'];
+};
+
+/** select columns of table "spatial_ref_sys" */
+export type Spatial_Ref_Sys_Select_Column =
+  /** column name */
+  | 'auth_name'
+  /** column name */
+  | 'auth_srid'
+  /** column name */
+  | 'proj4text'
+  /** column name */
+  | 'srid'
+  /** column name */
+  | 'srtext';
+
+/** input type for updating data in table "spatial_ref_sys" */
+export type Spatial_Ref_Sys_Set_Input = {
+  auth_name?: InputMaybe<Scalars['String']['input']>;
+  auth_srid?: InputMaybe<Scalars['Int']['input']>;
+  proj4text?: InputMaybe<Scalars['String']['input']>;
+  srid?: InputMaybe<Scalars['Int']['input']>;
+  srtext?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate stddev on columns */
+export type Spatial_Ref_Sys_Stddev_Fields = {
+  auth_srid?: Maybe<Scalars['Float']['output']>;
+  srid?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Spatial_Ref_Sys_Stddev_Pop_Fields = {
+  auth_srid?: Maybe<Scalars['Float']['output']>;
+  srid?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Spatial_Ref_Sys_Stddev_Samp_Fields = {
+  auth_srid?: Maybe<Scalars['Float']['output']>;
+  srid?: Maybe<Scalars['Float']['output']>;
+};
+
+/** Streaming cursor of the table "spatial_ref_sys" */
+export type Spatial_Ref_Sys_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Spatial_Ref_Sys_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Spatial_Ref_Sys_Stream_Cursor_Value_Input = {
+  auth_name?: InputMaybe<Scalars['String']['input']>;
+  auth_srid?: InputMaybe<Scalars['Int']['input']>;
+  proj4text?: InputMaybe<Scalars['String']['input']>;
+  srid?: InputMaybe<Scalars['Int']['input']>;
+  srtext?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate sum on columns */
+export type Spatial_Ref_Sys_Sum_Fields = {
+  auth_srid?: Maybe<Scalars['Int']['output']>;
+  srid?: Maybe<Scalars['Int']['output']>;
+};
+
+/** update columns of table "spatial_ref_sys" */
+export type Spatial_Ref_Sys_Update_Column =
+  /** column name */
+  | 'auth_name'
+  /** column name */
+  | 'auth_srid'
+  /** column name */
+  | 'proj4text'
+  /** column name */
+  | 'srid'
+  /** column name */
+  | 'srtext';
+
+export type Spatial_Ref_Sys_Updates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Spatial_Ref_Sys_Inc_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Spatial_Ref_Sys_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Spatial_Ref_Sys_Bool_Exp;
+};
+
+/** aggregate var_pop on columns */
+export type Spatial_Ref_Sys_Var_Pop_Fields = {
+  auth_srid?: Maybe<Scalars['Float']['output']>;
+  srid?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate var_samp on columns */
+export type Spatial_Ref_Sys_Var_Samp_Fields = {
+  auth_srid?: Maybe<Scalars['Float']['output']>;
+  srid?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate variance on columns */
+export type Spatial_Ref_Sys_Variance_Fields = {
+  auth_srid?: Maybe<Scalars['Float']['output']>;
+  srid?: Maybe<Scalars['Float']['output']>;
+};
+
 export type St_D_Within_Geography_Input = {
   distance: Scalars['Float']['input'];
   from: Scalars['geography']['input'];
@@ -31824,6 +33306,14 @@ export type Subscription_Root = {
   SendLocalLists_by_pk?: Maybe<SendLocalLists>;
   /** fetch data from the table in a streaming manner: "SendLocalLists" */
   SendLocalLists_stream: Array<SendLocalLists>;
+  /** fetch data from the table: "SequelizeMeta" */
+  SequelizeMeta: Array<SequelizeMeta>;
+  /** fetch aggregated fields from the table: "SequelizeMeta" */
+  SequelizeMeta_aggregate: SequelizeMeta_Aggregate;
+  /** fetch data from the table: "SequelizeMeta" using primary key columns */
+  SequelizeMeta_by_pk?: Maybe<SequelizeMeta>;
+  /** fetch data from the table in a streaming manner: "SequelizeMeta" */
+  SequelizeMeta_stream: Array<SequelizeMeta>;
   /** An array relationship */
   ServerNetworkProfiles: Array<ServerNetworkProfiles>;
   /** An aggregate relationship */
@@ -31960,6 +33450,38 @@ export type Subscription_Root = {
   Variables_by_pk?: Maybe<Variables>;
   /** fetch data from the table in a streaming manner: "Variables" */
   Variables_stream: Array<Variables>;
+  /** fetch data from the table: "geography_columns" */
+  geography_columns: Array<Geography_Columns>;
+  /** fetch aggregated fields from the table: "geography_columns" */
+  geography_columns_aggregate: Geography_Columns_Aggregate;
+  /** fetch data from the table in a streaming manner: "geography_columns" */
+  geography_columns_stream: Array<Geography_Columns>;
+  /** fetch data from the table: "geometry_columns" */
+  geometry_columns: Array<Geometry_Columns>;
+  /** fetch aggregated fields from the table: "geometry_columns" */
+  geometry_columns_aggregate: Geometry_Columns_Aggregate;
+  /** fetch data from the table in a streaming manner: "geometry_columns" */
+  geometry_columns_stream: Array<Geometry_Columns>;
+  /** fetch data from the table: "raster_columns" */
+  raster_columns: Array<Raster_Columns>;
+  /** fetch aggregated fields from the table: "raster_columns" */
+  raster_columns_aggregate: Raster_Columns_Aggregate;
+  /** fetch data from the table in a streaming manner: "raster_columns" */
+  raster_columns_stream: Array<Raster_Columns>;
+  /** fetch data from the table: "raster_overviews" */
+  raster_overviews: Array<Raster_Overviews>;
+  /** fetch aggregated fields from the table: "raster_overviews" */
+  raster_overviews_aggregate: Raster_Overviews_Aggregate;
+  /** fetch data from the table in a streaming manner: "raster_overviews" */
+  raster_overviews_stream: Array<Raster_Overviews>;
+  /** fetch data from the table: "spatial_ref_sys" */
+  spatial_ref_sys: Array<Spatial_Ref_Sys>;
+  /** fetch aggregated fields from the table: "spatial_ref_sys" */
+  spatial_ref_sys_aggregate: Spatial_Ref_Sys_Aggregate;
+  /** fetch data from the table: "spatial_ref_sys" using primary key columns */
+  spatial_ref_sys_by_pk?: Maybe<Spatial_Ref_Sys>;
+  /** fetch data from the table in a streaming manner: "spatial_ref_sys" */
+  spatial_ref_sys_stream: Array<Spatial_Ref_Sys>;
 };
 
 export type Subscription_RootAsyncJobStatusesArgs = {
@@ -32824,6 +34346,32 @@ export type Subscription_RootSendLocalLists_StreamArgs = {
   where?: InputMaybe<SendLocalLists_Bool_Exp>;
 };
 
+export type Subscription_RootSequelizeMetaArgs = {
+  distinct_on?: InputMaybe<Array<SequelizeMeta_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<SequelizeMeta_Order_By>>;
+  where?: InputMaybe<SequelizeMeta_Bool_Exp>;
+};
+
+export type Subscription_RootSequelizeMeta_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<SequelizeMeta_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<SequelizeMeta_Order_By>>;
+  where?: InputMaybe<SequelizeMeta_Bool_Exp>;
+};
+
+export type Subscription_RootSequelizeMeta_By_PkArgs = {
+  name: Scalars['String']['input'];
+};
+
+export type Subscription_RootSequelizeMeta_StreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<SequelizeMeta_Stream_Cursor_Input>>;
+  where?: InputMaybe<SequelizeMeta_Bool_Exp>;
+};
+
 export type Subscription_RootServerNetworkProfilesArgs = {
   distinct_on?: InputMaybe<Array<ServerNetworkProfiles_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -33264,6 +34812,120 @@ export type Subscription_RootVariables_StreamArgs = {
   batch_size: Scalars['Int']['input'];
   cursor: Array<InputMaybe<Variables_Stream_Cursor_Input>>;
   where?: InputMaybe<Variables_Bool_Exp>;
+};
+
+export type Subscription_RootGeography_ColumnsArgs = {
+  distinct_on?: InputMaybe<Array<Geography_Columns_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Geography_Columns_Order_By>>;
+  where?: InputMaybe<Geography_Columns_Bool_Exp>;
+};
+
+export type Subscription_RootGeography_Columns_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Geography_Columns_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Geography_Columns_Order_By>>;
+  where?: InputMaybe<Geography_Columns_Bool_Exp>;
+};
+
+export type Subscription_RootGeography_Columns_StreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<Geography_Columns_Stream_Cursor_Input>>;
+  where?: InputMaybe<Geography_Columns_Bool_Exp>;
+};
+
+export type Subscription_RootGeometry_ColumnsArgs = {
+  distinct_on?: InputMaybe<Array<Geometry_Columns_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Geometry_Columns_Order_By>>;
+  where?: InputMaybe<Geometry_Columns_Bool_Exp>;
+};
+
+export type Subscription_RootGeometry_Columns_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Geometry_Columns_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Geometry_Columns_Order_By>>;
+  where?: InputMaybe<Geometry_Columns_Bool_Exp>;
+};
+
+export type Subscription_RootGeometry_Columns_StreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<Geometry_Columns_Stream_Cursor_Input>>;
+  where?: InputMaybe<Geometry_Columns_Bool_Exp>;
+};
+
+export type Subscription_RootRaster_ColumnsArgs = {
+  distinct_on?: InputMaybe<Array<Raster_Columns_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Raster_Columns_Order_By>>;
+  where?: InputMaybe<Raster_Columns_Bool_Exp>;
+};
+
+export type Subscription_RootRaster_Columns_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Raster_Columns_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Raster_Columns_Order_By>>;
+  where?: InputMaybe<Raster_Columns_Bool_Exp>;
+};
+
+export type Subscription_RootRaster_Columns_StreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<Raster_Columns_Stream_Cursor_Input>>;
+  where?: InputMaybe<Raster_Columns_Bool_Exp>;
+};
+
+export type Subscription_RootRaster_OverviewsArgs = {
+  distinct_on?: InputMaybe<Array<Raster_Overviews_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Raster_Overviews_Order_By>>;
+  where?: InputMaybe<Raster_Overviews_Bool_Exp>;
+};
+
+export type Subscription_RootRaster_Overviews_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Raster_Overviews_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Raster_Overviews_Order_By>>;
+  where?: InputMaybe<Raster_Overviews_Bool_Exp>;
+};
+
+export type Subscription_RootRaster_Overviews_StreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<Raster_Overviews_Stream_Cursor_Input>>;
+  where?: InputMaybe<Raster_Overviews_Bool_Exp>;
+};
+
+export type Subscription_RootSpatial_Ref_SysArgs = {
+  distinct_on?: InputMaybe<Array<Spatial_Ref_Sys_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Spatial_Ref_Sys_Order_By>>;
+  where?: InputMaybe<Spatial_Ref_Sys_Bool_Exp>;
+};
+
+export type Subscription_RootSpatial_Ref_Sys_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Spatial_Ref_Sys_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Spatial_Ref_Sys_Order_By>>;
+  where?: InputMaybe<Spatial_Ref_Sys_Bool_Exp>;
+};
+
+export type Subscription_RootSpatial_Ref_Sys_By_PkArgs = {
+  srid: Scalars['Int']['input'];
+};
+
+export type Subscription_RootSpatial_Ref_Sys_StreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<Spatial_Ref_Sys_Stream_Cursor_Input>>;
+  where?: InputMaybe<Spatial_Ref_Sys_Bool_Exp>;
 };
 
 /** Boolean expression to compare columns of type "timestamptz". All fields are combined with logical 'AND'. */

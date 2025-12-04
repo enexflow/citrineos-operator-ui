@@ -111,6 +111,9 @@ const requestMiddleware = async (request: any) => {
       }
     }
   }
+  if (config.hasuraAdminSecret) {
+    requestHeaders['x-hasura-admin-secret'] = config.hasuraAdminSecret;
+  }
   return {
     ...request,
     headers: requestHeaders,
@@ -127,24 +130,32 @@ const client = new GraphQLClient(API_URL, {
 const webSocketClient = graphqlWS.createClient({
   url: WS_URL,
   connectionParams: async () => {
+    const headers: Record<string, string> = {};
+    
+    if (config.hasuraAdminSecret) {
+      headers['x-hasura-admin-secret'] = config.hasuraAdminSecret;
+    }
+    
     const token = await authProvider.getToken();
     if (token) {
+      headers.Authorization = `Bearer ${token}`;
       const hasuraHeaders = await authProvider.getHasuraHeaders();
       if (hasuraHeaders) {
         const hasuraRole = hasuraHeaders.get(HasuraHeader.X_HASURA_ROLE);
-        if (hasuraRole)
+        if (hasuraRole) {
           // If a role is set, include it in the connection params
-          return {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              [HasuraHeader.X_HASURA_ROLE]: hasuraRole,
-            },
-          };
+          headers[HasuraHeader.X_HASURA_ROLE] = hasuraRole;
+        }
       }
       return {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers,
+      };
+    }
+    
+    // Return headers even if no token (may still have admin secret)
+    if (Object.keys(headers).length > 0) {
+      return {
+        headers,
       };
     }
   },

@@ -7,5 +7,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
+    environment:
+      VITE_HASURA_ADMIN_SECRET: password
     ports:
-      - 3000:3000
+      - 3900:3000

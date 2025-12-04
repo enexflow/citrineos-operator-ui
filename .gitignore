@@ -24,3 +24,5 @@ _.njsproj
 _.sln
 \*.sw?
 .env
+.env.staging
+.env.production
