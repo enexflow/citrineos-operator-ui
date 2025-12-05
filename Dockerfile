@@ -4,8 +4,14 @@
 
 FROM refinedev/node:22
 WORKDIR /app/refine
+
+# Copy .env file if it exists, then export VITE_* variables before build
 COPY . .
-RUN npm i && npm run build
+
+# Install dependencies first, then use dotenv-cli to load .env and build
+# dotenv-cli will automatically use .env file if it exists, or skip if it doesn't
+RUN npm i && npx dotenv-cli -- npm run build
+
 RUN npm install -g serve
 WORKDIR /app/refine/dist
 CMD ["serve", "-s"]
