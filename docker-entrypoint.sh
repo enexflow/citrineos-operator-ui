@@ -1,0 +1,31 @@
+#!/bin/sh
+# SPDX-FileCopyrightText: 2025 Contributors to the CitrineOS Project
+#
+# SPDX-License-Identifier: Apache-2.0
+
+# Generate config.js from environment variables
+cat > /app/refine/dist/config.js <<EOF
+window.APP_CONFIG = {
+  VITE_APP_NAME: "${VITE_APP_NAME:-CitrineOS}",
+  VITE_GOOGLE_MAPS_API_KEY: "${VITE_GOOGLE_MAPS_API_KEY:-}",
+  VITE_GOOGLE_MAPS_LOCATION_PICKER_MAP_ID: "${VITE_GOOGLE_MAPS_LOCATION_PICKER_MAP_ID:-}",
+  VITE_GOOGLE_MAPS_OVERVIEW_MAP_ID: "${VITE_GOOGLE_MAPS_OVERVIEW_MAP_ID:-}",
+  VITE_HASURA_ADMIN_SECRET: "${VITE_HASURA_ADMIN_SECRET:-}",
+  VITE_HASURA_CLAIM: "${VITE_HASURA_CLAIM:-https://hasura.io/jwt/claims}",
+  VITE_TENANT_ID: "${VITE_TENANT_ID:-}",
+  VITE_API_URL: "${VITE_API_URL:-http://localhost:8090/v1/graphql}",
+  VITE_WS_URL: "${VITE_WS_URL:-ws://localhost:8090/v1/graphql}",
+  VITE_CITRINE_CORE_URL: "${VITE_CITRINE_CORE_URL:-}",
+  VITE_FILE_SERVER_URL: "${VITE_FILE_SERVER_URL:-}",
+  VITE_LOGO_URL: "${VITE_LOGO_URL:-}",
+  VITE_METRICS_URL: "${VITE_METRICS_URL:-}",
+  VITE_ADMIN_EMAIL: "${VITE_ADMIN_EMAIL:-}",
+  VITE_ADMIN_PASSWORD: "${VITE_ADMIN_PASSWORD:-}",
+  VITE_KEYCLOAK_URL: "${VITE_KEYCLOAK_URL:-}",
+  VITE_KEYCLOAK_REALM: "${VITE_KEYCLOAK_REALM:-}",
+  VITE_KEYCLOAK_CLIENT_ID: "${VITE_KEYCLOAK_CLIENT_ID:-operator-ui}"
+};
+EOF
+
+# Start the server
+exec serve -s
