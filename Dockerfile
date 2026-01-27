@@ -13,5 +13,7 @@ COPY . .
 RUN npm i && npx dotenv-cli -- npm run build
 
 RUN npm install -g serve
+COPY docker-entrypoint.sh /app/refine/docker-entrypoint.sh
+RUN chmod +x /app/refine/docker-entrypoint.sh
 WORKDIR /app/refine/dist
-CMD ["serve", "-s"]
+CMD ["/app/refine/docker-entrypoint.sh"]

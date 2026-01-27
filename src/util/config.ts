@@ -22,6 +22,7 @@ declare global {
       VITE_ADMIN_PASSWORD?: string;
       VITE_KEYCLOAK_URL?: string;
       VITE_KEYCLOAK_REALM?: string;
+      VITE_KEYCLOAK_CLIENT_ID?: string;
     };
   }
 }
@@ -44,6 +45,7 @@ const getConfig: () => {
   adminPassword?: string;
   keycloakUrl?: string;
   keycloakRealm?: string;
+  keycloakClientId?: string;
 } = () => {
   return {
     appName:
@@ -96,6 +98,10 @@ const getConfig: () => {
     keycloakRealm:
       window.APP_CONFIG?.VITE_KEYCLOAK_REALM ||
       import.meta.env.VITE_KEYCLOAK_REALM,
+    keycloakClientId:
+      window.APP_CONFIG?.VITE_KEYCLOAK_CLIENT_ID ||
+      import.meta.env.VITE_KEYCLOAK_CLIENT_ID ||
+      'operator-ui',
   };
 };
 
