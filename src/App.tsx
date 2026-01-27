@@ -58,21 +58,15 @@ import {
   resources as partnerResources,
   routes as PartnersRoutes,
 } from './pages/partners';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo } from 'react';
 import { darkTheme, lightTheme } from './theme';
 import { MainMenu, MenuSection } from './components/main-menu/main.menu';
-import {
-  checkTelemetryConsent,
-  saveTelemetryConsent,
-  TelemetryConsentModal,
-} from '@util/TelemetryConsentModal';
 import { initTelemetry } from './telemetry';
 import AppModal from './AppModal';
 import {
   createAccessProvider,
   createGenericAuthProvider,
   createKeycloakAuthProvider,
-  HasuraHeader,
   ResourceType,
 } from '@util/auth';
 import { notificationProvider } from '@util/notificationProvider';
@@ -81,11 +75,13 @@ import config from '@util/config';
 
 const KEYCLOAK_URL = config.keycloakUrl;
 const KEYCLOAK_REALM = config.keycloakRealm;
+const KEYCLOAK_CLIENT_ID = config.keycloakClientId;
 export const authProvider =
   KEYCLOAK_URL && KEYCLOAK_REALM
     ? createKeycloakAuthProvider({
         keycloakUrl: KEYCLOAK_URL,
         keycloakRealm: KEYCLOAK_REALM,
+        keycloakClientId: KEYCLOAK_CLIENT_ID,
       })
     : createGenericAuthProvider();
 
@@ -103,16 +99,6 @@ const requestMiddleware = async (request: any) => {
     if (token) {
       requestHeaders['Authorization'] = 'Bearer ' + token;
     }
-    const hasuraHeaders = await authProvider.getHasuraHeaders();
-    if (hasuraHeaders) {
-      const hasuraRole = hasuraHeaders.get(HasuraHeader.X_HASURA_ROLE);
-      if (hasuraRole) {
-        requestHeaders[HasuraHeader.X_HASURA_ROLE] = hasuraRole;
-      }
-    }
-  }
-  if (config.hasuraAdminSecret) {
-    requestHeaders['x-hasura-admin-secret'] = config.hasuraAdminSecret;
   }
   return {
     ...request,
@@ -131,33 +117,11 @@ const webSocketClient = graphqlWS.createClient({
   url: WS_URL,
   connectionParams: async () => {
     const headers: Record<string, string> = {};
-    
-    if (config.hasuraAdminSecret) {
-      headers['x-hasura-admin-secret'] = config.hasuraAdminSecret;
-    }
-    
     const token = await authProvider.getToken();
     if (token) {
       headers.Authorization = `Bearer ${token}`;
-      const hasuraHeaders = await authProvider.getHasuraHeaders();
-      if (hasuraHeaders) {
-        const hasuraRole = hasuraHeaders.get(HasuraHeader.X_HASURA_ROLE);
-        if (hasuraRole) {
-          // If a role is set, include it in the connection params
-          headers[HasuraHeader.X_HASURA_ROLE] = hasuraRole;
-        }
-      }
-      return {
-        headers,
-      };
     }
-    
-    // Return headers even if no token (may still have admin secret)
-    if (Object.keys(headers).length > 0) {
-      return {
-        headers,
-      };
-    }
+    return { headers };
   },
 });
 
@@ -178,10 +142,7 @@ hasuraDataProvider.getApiUrl = () => {
   return API_URL;
 };
 
-interface MainAntdAppProps {
-  isModalVisible: boolean;
-  handleModalDecision: (agreed: boolean) => void;
-}
+interface MainAntdAppProps {}
 
 const resources: ResourceProps[] = [
   ...chargingStationResources,
@@ -191,10 +152,7 @@ const resources: ResourceProps[] = [
   ...partnerResources,
 ];
 
-const MainAntDApp: React.FC<MainAntdAppProps> = ({
-  isModalVisible,
-  handleModalDecision,
-}: MainAntdAppProps) => {
+const MainAntDApp: React.FC<MainAntdAppProps> = () => {
   const { mode } = useContext(ColorModeContext);
   const location = useLocation();
 
@@ -225,11 +183,6 @@ const MainAntDApp: React.FC<MainAntdAppProps> = ({
   return (
     <AntdApp>
       <ConfigProvider theme={mode === 'light' ? lightTheme : darkTheme}>
-        <TelemetryConsentModal
-          visible={isModalVisible}
-          onDecision={handleModalDecision}
-        />
-
         <Refine
           authProvider={authProvider}
           accessControlProvider={accessControlProvider}
@@ -309,43 +262,20 @@ const MainAntDApp: React.FC<MainAntdAppProps> = ({
 };
 
 export default function App() {
-  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
-    const telemetryConsentModalInitialization = async () => {
-      // On app start, try to read an existing consent
-      const existingConsent = await checkTelemetryConsent();
-      if (existingConsent == null) {
-        // No consent found => show modal
-        setIsModalVisible(true);
-      } else {
-        if (existingConsent) {
-          initTelemetry();
-        }
-      }
-    };
-    telemetryConsentModalInitialization();
+    initTelemetry();
   }, []);
 
   /**
    * Handle user’s choice:
    */
-  const handleModalDecision = (agreed: boolean) => {
-    saveTelemetryConsent(agreed);
-    setIsModalVisible(false);
-    if (agreed) {
-      initTelemetry();
-    }
-  };
 
   return (
     <BrowserRouter>
       <RefineKbarProvider>
         <ColorModeContextProvider>
-          <MainAntDApp
-            isModalVisible={isModalVisible}
-            handleModalDecision={handleModalDecision}
-          />
+          <MainAntDApp />
         </ColorModeContextProvider>
       </RefineKbarProvider>
     </BrowserRouter>

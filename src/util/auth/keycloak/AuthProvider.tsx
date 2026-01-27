@@ -21,6 +21,7 @@ import { useNavigate } from 'react-router-dom';
 export interface KeycloakAuthProviderConfig {
   keycloakUrl: string;
   keycloakRealm: string;
+  keycloakClientId?: string;
 }
 
 const HASURA_CLAIM = config.hasuraClaim;
@@ -31,12 +32,12 @@ const HASURA_CLAIM = config.hasuraClaim;
 export const createKeycloakAuthProvider = (
   authProviderConfig: KeycloakAuthProviderConfig,
 ): AuthProvider & AuthenticationContextProvider => {
-  const { keycloakUrl, keycloakRealm } = authProviderConfig;
+  const { keycloakUrl, keycloakRealm, keycloakClientId } = authProviderConfig;
 
   const keycloakConfig = {
     url: keycloakUrl,
     realm: keycloakRealm,
-    clientId: 'operator-ui',
+    clientId: keycloakClientId || 'operator-ui',
   };
 
   const keycloak = new Keycloak(keycloakConfig);
@@ -104,28 +105,52 @@ export const createKeycloakAuthProvider = (
   };
 
   /**
-   * Get token from storage
+   * Get token from Keycloak
    */
   const getToken = async (): Promise<string | undefined> => {
-    // Try to refresh the token if it's about to expire
+    if (!keycloak.authenticated) {
+      return;
+    }
+
     try {
-      // Refresh token if it has less than 30 seconds remaining
+      // Refresh token if it expires within 30 seconds
+      // This also validates the token (signature, expiration, issuer)
       await keycloak.updateToken(30);
-      return keycloak.token;
+      return keycloak.token || undefined;
     } catch (error) {
       console.error('Token refresh failed:', error);
+      return;
     }
-    return;
   };
 
   /**
    * Check if user has a specific role
    */
   const hasRole = (permissions: KeycloakPermissions, role: string): boolean => {
-    if (!permissions.resources?.['operator-ui']) {
-      return false;
+    const roleLower = role.toLowerCase();
+    const clientId = keycloakConfig.clientId;
+    const clientRoles = permissions.resources?.[clientId];
+    if (clientRoles?.some((r) => r.toLowerCase() === roleLower)) {
+      return true;
     }
-    return permissions.resources['operator-ui'].includes(role);
+    
+    // Check all client resources (fallback if client ID doesn't match)
+    if (permissions.resources) {
+      for (const roles of Object.values(permissions.resources)) {
+        if (roles.some((r) => r.toLowerCase() === roleLower)) {
+          return true;
+        }
+      }
+    }
+    
+    // Check realm roles
+    if (permissions.roles) {
+      return permissions.roles.some((r) => 
+        String(r).toLowerCase() === roleLower
+      );
+    }
+    
+    return false;
   };
 
   /**
@@ -134,14 +159,20 @@ export const createKeycloakAuthProvider = (
   const getUserRole = async (
     permissions?: KeycloakPermissions,
   ): Promise<'admin' | 'user' | undefined> => {
-    if (permissions) {
-      if (hasRole(permissions, 'admin')) {
-        return 'admin';
-      }
-      if (hasRole(permissions, 'user')) {
-        return 'user';
-      }
+    if (!permissions) {
+      return;
     }
+
+    if (hasRole(permissions, 'admin')) {
+      return 'admin';
+    }
+    
+    if (hasRole(permissions, 'user')) {
+      return 'user';
+    }
+
+    // Default to user if any role exists
+    return permissions.roles?.length ? 'user' : undefined;
   };
 
   /**
@@ -295,23 +326,16 @@ export const createKeycloakAuthProvider = (
         return null;
       }
 
-      // Extract tenant information from token - customize based on your token structure
-      const tenants =
-        (keycloak.tokenParsed.tenants as string[]) ||
-        (keycloak.tokenParsed.tenant_id
-          ? [keycloak.tokenParsed.tenant_id]
-          : []);
+      // Extract tenant information from token
+      const tenants = (keycloak.tokenParsed.tenants as string[]) ||
+        (keycloak.tokenParsed.tenant_id ? [keycloak.tokenParsed.tenant_id] : []) ||
+        (keycloak.realm ? [keycloak.realm] : []);
 
-      // If no tenants in token but realm exists, use realm as default tenant
-      if (tenants.length === 0 && keycloak.realm) {
-        tenants.push(keycloak.realm);
-      }
-
-      // Get global roles from token
-      const roles: KeycloakRole[] =
-        keycloak.tokenParsed.realm_access?.roles.map(
-          (role) => KeycloakRole[role as keyof typeof KeycloakRole],
-        ) || [];
+      // Get realm roles from token and map to KeycloakRole enum
+      const realmRoles = keycloak.tokenParsed.realm_access?.roles || [];
+      const roles: KeycloakRole[] = realmRoles
+        .filter((role: string) => role === 'admin' || role === 'user')
+        .map((role: string) => role as KeycloakRole);
 
       const permissions: KeycloakPermissions = {
         tenants,
@@ -328,9 +352,8 @@ export const createKeycloakAuthProvider = (
         >;
 
         // Map each client to its roles
-        Object.keys(resourceAccess).forEach((clientId) => {
-          permissions.resources![clientId] =
-            resourceAccess[clientId].roles || [];
+        Object.entries(resourceAccess).forEach(([clientId, access]) => {
+          permissions.resources![clientId] = access.roles || [];
         });
       }
 
