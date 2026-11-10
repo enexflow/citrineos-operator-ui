@@ -2,7 +2,7 @@ name: Push docker images
 
 on:
   push:
-    branches: [ env/staging, env/prod, TECH-1315/creer-une-cicd-pour-le-repo-citrine]
+    branches: [ env/dev, env/staging, env/prod, TECH-1315/creer-une-cicd-pour-le-repo-citrine]
   workflow_dispatch:
 
 jobs:
